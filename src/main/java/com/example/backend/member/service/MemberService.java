@@ -30,13 +30,16 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
 
     public void signupMember(SignupRequestDTO req){
-        if(emailVerifyService.verifyCode(req.getEmail(), req.getVerification())){
+        if(!emailVerifyService.verifyCode(req.getEmail(), req.getVerification())){
+            System.out.println("유효하지 않은 인증코드");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "유효하지 않은 인증코드");
         }
         if (checkEmailDuplication(req.getEmail())){
+            System.out.println("이메일 중복");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이메일 중복");
         }
         if (!req.getPassword().equals(req.getCheckPassword())){
+            System.out.println("비밀번호 일치하지 않음");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호 일치하지 않음");
         }
         req.setPassword(passwordEncoder.encode(req.getPassword()));

@@ -21,9 +21,9 @@ public class MemberDtoConverter {
 
     public static EmailVerifyResponseDTO emailVerifyResponseConverter(EmailVerifyRequestDTO req){
         LocalDate nowDate = LocalDate.now();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yy. mm. dd");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy. MM. dd");
         LocalTime nowTime = LocalTime.now();
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         EmailVerifyResponseDTO dto = new EmailVerifyResponseDTO();
         dto.setEmail(req.getEmail());

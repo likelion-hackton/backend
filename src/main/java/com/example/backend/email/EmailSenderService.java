@@ -22,10 +22,10 @@ public class EmailSenderService {
     // 이메일 전송
     public void sendVerification(String email, String code){
         LocalDate nowDate = LocalDate.now();
-        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy. mm. dd");
+        DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy. MM. dd");
 
         LocalTime nowTime = LocalTime.now();
-        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("hh:mm:ss");
+        DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
