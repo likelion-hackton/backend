@@ -19,6 +19,7 @@ public class EmailSenderService {
 
     private final JavaMailSender mailSender;
 
+    // 이메일 전송
     public void sendVerification(String email, String code){
         LocalDate nowDate = LocalDate.now();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy. mm. dd");
