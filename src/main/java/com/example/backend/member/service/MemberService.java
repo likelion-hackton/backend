@@ -4,13 +4,18 @@ import com.example.backend.email.EmailSenderService;
 import com.example.backend.email.EmailVerifyService;
 import com.example.backend.member.entity.Member;
 import com.example.backend.member.entity.dto.MemberDtoConverter;
+import com.example.backend.member.entity.dto.request.EmailVerifyRequestDTO;
 import com.example.backend.member.entity.dto.request.SignupRequestDTO;
+import com.example.backend.member.entity.dto.response.EmailVerifyResponseDTO;
 import com.example.backend.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
 
@@ -26,10 +31,25 @@ public class MemberService {
 
     public void signupMember(SignupRequestDTO req){
         if(emailVerifyService.verifyCode(req.getEmail(), req.getVerification())){
-            throw new RuntimeException("유효하지 않은 인증코드");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "유효하지 않은 인증코드");
+        }
+        if (checkEmailDuplication(req.getEmail())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이메일 중복");
+        }
+        if (!req.getPassword().equals(req.getCheckPassword())){
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호 일치하지 않음");
         }
         req.setPassword(passwordEncoder.encode(req.getPassword()));
         memberRepository.save(MemberDtoConverter.signupReqeustConverter(req));
+    }
+
+    public boolean checkEmailDuplication(String email){
+        return memberRepository.existsByEmail(email);
+    }
+
+    public EmailVerifyResponseDTO sendVerificationEmail(EmailVerifyRequestDTO req){
+        emailSenderService.sendVerification(req.getEmail(), emailVerifyService.generateVerificationCode(req.getEmail()));
+        return MemberDtoConverter.emailVerifyResponseConverter(req);
     }
 
     public Member getMemberById(Long id){
