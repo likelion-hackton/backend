@@ -10,6 +10,7 @@ import com.example.backend.member.service.MemberService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -36,6 +37,13 @@ public class MemberController {
     @ResponseBody
     public ResponseEntity<JwtTokenResponseDTO> login(@Valid @RequestBody LoginRequestDTO req){
         return ResponseEntity.ok(memberService.login(req));
+    }
+
+    @PostMapping("/logout")
+    @ResponseBody
+    public ResponseEntity<String> logout(Authentication auth){
+        memberService.logout(auth.getName());
+        return ResponseEntity.ok("로그아웃 성공");
     }
 
     @PostMapping("/refresh")
