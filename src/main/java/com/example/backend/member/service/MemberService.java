@@ -126,6 +126,15 @@ public class MemberService {
         );
     }
 
+    public void logout(String email){
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if(member == null){
+            System.out.println("사용자 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "사용자 찾을 수 없음");
+        }
+        refreshTokenRepository.deleteByMember(member);
+    }
+
     public Member getMemberById(Long id){
         Optional<Member> findMember = memberRepository.findById(id);
         return findMember.orElse(null);
