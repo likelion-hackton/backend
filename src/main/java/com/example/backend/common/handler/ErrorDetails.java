@@ -9,13 +9,15 @@ public class ErrorDetails {
     private String error;
     private String message;
     private String details;
+    private String errorCode;
 
-    public ErrorDetails(Date timestamp, int statusCode, String error, String message, String details) {
+    public ErrorDetails(Date timestamp, int statusCode, String error, String message, String details, String errorCode) {
         super();
         this.timestamp = timestamp;
         this.statusCode = statusCode;
         this.error = error;
         this.message = message;
         this.details = details;
+        this.errorCode = errorCode;
     }
 }
