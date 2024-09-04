@@ -87,8 +87,8 @@ public class MemberService {
         // 사용자 존재 여부 확인
         Member member = memberRepository.findByEmail(req.getEmail()).orElse(null);
         if(member == null){
-            logger.warn("존재하지 않는 사용자");
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 사용자");
+            logger.warn("사용자 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
         }
         if(!passwordEncoder.matches(req.getPassword(), member.getPassword())){
             logger.warn("비밀번호가 일치하지 않음");
@@ -97,26 +97,20 @@ public class MemberService {
 
         // 토큰 반환
         return MemberDtoConverter.jwtTokenResponseConverter(
-                JwtTokenUtil.createToken(req.getEmail(), secretKey, expirationTime),
+                JwtTokenUtil.createToken(member.getEmail(), secretKey, expirationTime),
                 expirationTime.toString(),
-                createRefreshToken(req.getEmail()).getRefreshToken(),
+                createRefreshToken(member).getRefreshToken(),
                 refreshExpirationTime.toString()
         );
     }
 
     // Refresh Token 생성
-    public RefreshToken createRefreshToken(String email){
-        // 사용자 확인
-        Member member = memberRepository.findByEmail(email).orElse(null);
-        if(member == null){
-            logger.warn("존재하지 않는 사용자");
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 사용자");
-        }
+    public RefreshToken createRefreshToken(Member member){
 
         // DB에 저장하기 적합한 Instant 형으로 만료시간 저장
         Instant instant = Instant.now().plusMillis(refreshExpirationTime);
         // 토큰 생성 저장 후 전송
-        String refreshToken = JwtTokenUtil.createRefreshToken(email, secretKey, refreshExpirationTime);
+        String refreshToken = JwtTokenUtil.createRefreshToken(member.getEmail(), secretKey, refreshExpirationTime);
         return refreshTokenRepository.save(RefreshTokenConverter.createTokenConverter(refreshToken, member, instant));
     }
 
