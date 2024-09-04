@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class JwtTokenResponseDTO {
+public class JwtTokenResponseDTO { // 토큰 발급
     private String token_type = "Bearer ";
 
     @NotBlank(message = "엑세스 토큰이 비어있습니다")

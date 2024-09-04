@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class RefreshRequestDTO {
+public class RefreshRequestDTO { // Refresh 요청
     @NotBlank(message = "리프레시 토큰이 비어있습니다")
     private String refresh_token;
 }

@@ -21,12 +21,14 @@ public class EmailSenderService {
 
     // 이메일 전송
     public void sendVerification(String email, String code){
+        // 시간 포맷 설정
         LocalDate nowDate = LocalDate.now();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy. MM. dd");
 
         LocalTime nowTime = LocalTime.now();
         DateTimeFormatter timeFormatter = DateTimeFormatter.ofPattern("HH:mm:ss");
 
+        // 메시지 정의
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(email);
         message.setSubject("이메일 인증 메일 발송");

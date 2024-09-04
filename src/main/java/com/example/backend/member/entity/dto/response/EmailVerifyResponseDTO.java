@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class EmailVerifyResponseDTO {
+public class EmailVerifyResponseDTO { // 인증메일 전송
     @NotBlank(message = "이메일이 비어있습니다")
     private String email;
 

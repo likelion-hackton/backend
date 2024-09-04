@@ -12,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 
 public class MemberDtoConverter {
 
+    // 회원가입 요청을 멤버 Entity로 변환
     public static Member signupReqeustConverter(SignupRequestDTO req){
         return Member.builder()
                 .email(req.getEmail())
@@ -20,6 +21,7 @@ public class MemberDtoConverter {
                 .build();
     }
 
+    // 이메일 인증 응답 변환
     public static EmailVerifyResponseDTO emailVerifyResponseConverter(EmailVerifyRequestDTO req){
         LocalDate nowDate = LocalDate.now();
         DateTimeFormatter dateFormatter = DateTimeFormatter.ofPattern("yyyy. MM. dd");
@@ -32,6 +34,7 @@ public class MemberDtoConverter {
         return dto;
     }
 
+    // 토큰 발급 응답 변환
     public static JwtTokenResponseDTO jwtTokenResponseConverter(String token, String expiresTime,
                                                                 String refreshToken, String refreshExpiresTime){
         JwtTokenResponseDTO dto = new JwtTokenResponseDTO();

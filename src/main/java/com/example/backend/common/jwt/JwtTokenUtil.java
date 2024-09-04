@@ -10,9 +10,11 @@ public class JwtTokenUtil {
 
     // 토큰 생성
     public static String createToken(String email, String secretKey, long expiresTime) {
+        // 포함할 정보 설정
         Claims claims = Jwts.claims();
         claims.put("email", email);
 
+        // 발급
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
@@ -21,10 +23,13 @@ public class JwtTokenUtil {
                 .compact();
     }
 
+    // Refresh Token 생성
     public static String createRefreshToken(String email, String secretKey, long expiresTime) {
+        // 포함할 정보 설정
         Claims claims = Jwts.claims();
         claims.put("email", email);
 
+        // 발급
         return Jwts.builder()
                 .setClaims(claims)
                 .setIssuedAt(new Date(System.currentTimeMillis()))
