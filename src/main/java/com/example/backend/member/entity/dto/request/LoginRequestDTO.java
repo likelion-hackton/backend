@@ -8,7 +8,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @NoArgsConstructor
-public class LoginRequestDTO {
+public class LoginRequestDTO { // 로그인 요청
     @NotBlank(message = "이메일이 비어있습니다")
     private String email;
 

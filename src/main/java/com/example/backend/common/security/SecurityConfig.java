@@ -26,13 +26,14 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         return http
                 .httpBasic(AbstractHttpConfigurer::disable)
-                .headers(headers -> headers.frameOptions().disable())
-                .csrf(AbstractHttpConfigurer::disable)
+                .headers(headers -> headers.frameOptions().disable()) // h2 db 접근용
+                .csrf(AbstractHttpConfigurer::disable) // csrf 끔
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+                // 기본 필터 실행 전 JwtTokenFilter 먼저 실행
                 .addFilterBefore(new JwtTokenFilter(memberService, secretKey), UsernamePasswordAuthenticationFilter.class)
                 .authorizeHttpRequests(auth -> auth
                         .requestMatchers("**").permitAll()
-                        .anyRequest().authenticated())
+                        .anyRequest().authenticated()) // 일단 모든 요청에 권한을 확인하지 않음
                 .build();
     }
 }
