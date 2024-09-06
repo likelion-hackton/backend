@@ -17,7 +17,7 @@ public class MemberDtoConverter {
         return Member.builder()
                 .email(req.getEmail())
                 .password(req.getPassword())
-                .role("USER")
+                .permission("USER")
                 .build();
     }
 
