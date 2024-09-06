@@ -31,5 +31,5 @@ public class Member {
     private String password;
 
     @NotBlank
-    private String role;
+    private String permission;
 }
