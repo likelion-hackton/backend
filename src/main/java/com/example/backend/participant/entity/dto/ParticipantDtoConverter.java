@@ -6,6 +6,7 @@ import com.example.backend.participant.entity.Participant;
 
 public class ParticipantDtoConverter {
 
+    // 강의를 생성할 때 적용
     public static Participant createParticipantConverter(Member member, Lecture lecture){
         return Participant.builder()
                 .member(member)
