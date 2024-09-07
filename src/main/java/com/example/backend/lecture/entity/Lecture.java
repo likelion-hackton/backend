@@ -47,4 +47,8 @@ public class Lecture {
     @JsonManagedReference
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Participant> participants;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<LectureImage> lectureImages;
 }
