@@ -22,7 +22,7 @@ import java.util.List;
 public class LectureController {
     private final LectureService lectureService;
 
-    @PostMapping(name = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<LectureDetailResponseDTO> createLecture(@RequestPart("lecture") @Valid CreateLectureRequestDTO req,
                                                                   @RequestPart("images") List<MultipartFile> images,
                                                                   Authentication auth){

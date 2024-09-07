@@ -8,6 +8,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -50,9 +51,12 @@ public class Lecture {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<LectureImage> lectureImages;
+    private List<LectureImage> lectureImages = new ArrayList<>();
 
     public void addImage(LectureImage image) {
+        if (lectureImages == null) {
+            lectureImages = new ArrayList<>();
+        }
         lectureImages.add(image);
         image.setLecture(this);
     }
