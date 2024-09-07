@@ -7,6 +7,7 @@ import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.repository.LectureRepository;
 import com.example.backend.member.entity.Member;
 import com.example.backend.member.repository.MemberRepository;
+import com.example.backend.participant.repository.ParticipantRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,6 +24,7 @@ import org.springframework.web.server.ResponseStatusException;
 public class LectureService {
     private final LectureRepository lectureRepository;
     private final MemberRepository memberRepository;
+    private final ParticipantRepository participantRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(LectureService.class);
 
