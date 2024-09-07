@@ -1,6 +1,8 @@
 package com.example.backend.lecture.service;
 
+import com.example.backend.image.service.ImageService;
 import com.example.backend.lecture.entity.Lecture;
+import com.example.backend.lecture.entity.LectureImage;
 import com.example.backend.lecture.entity.dto.LectureDtoConverter;
 import com.example.backend.lecture.entity.dto.request.CreateLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
@@ -16,7 +18,10 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 @Primary
@@ -27,10 +32,13 @@ public class LectureService {
     private final MemberRepository memberRepository;
     private final ParticipantRepository participantRepository;
 
+    private final ImageService imageService;
+
     private static final Logger logger = LoggerFactory.getLogger(LectureService.class);
 
     // 강의 생성
-    public LectureDetailResponseDTO createLecture(CreateLectureRequestDTO req, String email){
+    public LectureDetailResponseDTO createLecture(CreateLectureRequestDTO req, String email,
+                                                  List<MultipartFile> images){
         Member member = memberRepository.findByEmail(email).orElse(null);
         if(member == null){ // 없는 사용자라면 X
             logger.warn("사용자 찾을 수 없음");
@@ -41,7 +49,16 @@ public class LectureService {
             logger.warn("접근 권한 없음");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "접근 권한 없음");
         }*/
-        Lecture saveLecture = lectureRepository.save(LectureDtoConverter.createLectureConverter(req));
+        Lecture lecture = LectureDtoConverter.createLectureConverter(req);
+
+        imageService.procesAndAddImages(lecture, images,
+                url -> {
+                    LectureImage image = new LectureImage();
+                    image.setImageUrl(url);
+                    return image;
+                }, Lecture::addImage);
+
+        Lecture saveLecture = lectureRepository.save(lecture);
         participantRepository.save(ParticipantDtoConverter.createParticipantConverter(member, saveLecture));
         return LectureDtoConverter.lectureDetailConverter(saveLecture);
     }
