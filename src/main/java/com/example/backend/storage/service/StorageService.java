@@ -43,7 +43,7 @@ public class StorageService {
             Files.copy(file.getInputStream(), targetLocation, StandardCopyOption.REPLACE_EXISTING);
 
             return ServletUriComponentsBuilder.fromCurrentContextPath()
-                    .path("/uploads/")
+                    .path("/api/image/")
                     .path(fileName)
                     .toUriString();
 

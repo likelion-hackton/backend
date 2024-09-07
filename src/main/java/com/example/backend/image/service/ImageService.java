@@ -24,8 +24,11 @@ public class ImageService {
                                                             Function<String, T> imageCreator, BiConsumer<E, T> imageAdder){
 
         for (MultipartFile imageFile : imageFiles) {
+            // 디렉토리에 저장 후 Url 받아오기
             String imageUrl = storageService.storeFile(imageFile);
+            // url 설정
             T image = imageCreator.apply(imageUrl);
+            // 추가
             imageAdder.accept(entity, image);
         }
     }
