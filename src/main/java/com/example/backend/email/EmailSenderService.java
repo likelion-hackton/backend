@@ -12,7 +12,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
-@Transactional
 @Primary
 @RequiredArgsConstructor
 public class EmailSenderService {
