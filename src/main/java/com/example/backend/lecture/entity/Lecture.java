@@ -51,7 +51,7 @@ public class Lecture {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
-    private List<LectureImage> lectureImages = new ArrayList<>();
+    private List<LectureImage> lectureImages;
 
     public void addImage(LectureImage image) {
         if (lectureImages == null) {
