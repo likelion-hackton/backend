@@ -25,7 +25,6 @@ import java.util.List;
 
 @Service
 @Primary
-@Transactional
 @RequiredArgsConstructor
 public class LectureService {
     private final LectureRepository lectureRepository;
@@ -37,6 +36,7 @@ public class LectureService {
     private static final Logger logger = LoggerFactory.getLogger(LectureService.class);
 
     // 강의 생성
+    @Transactional
     public LectureDetailResponseDTO createLecture(CreateLectureRequestDTO req, String email,
                                                   List<MultipartFile> images){
         Member member = memberRepository.findByEmail(email).orElse(null);
