@@ -9,6 +9,10 @@ import java.time.Instant;
 @Setter
 @NoArgsConstructor
 public class LectureDetailResponseDTO {
+
+    @NotNull(message = "강의 아이디가 비어있습니다.")
+    private Long id;
+
     @NotBlank(message = "강의명이 비어있습니다.")
     private String name;
 

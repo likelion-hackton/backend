@@ -20,6 +20,7 @@ public class LectureDtoConverter {
 
     public static LectureDetailResponseDTO lectureDetailConverter(Lecture lecture){
         LectureDetailResponseDTO dto = new LectureDetailResponseDTO();
+        dto.setId(lecture.getId());
         dto.setName(lecture.getName());
         dto.setDescription(lecture.getDescription());
         dto.setPrice(lecture.getPrice());
