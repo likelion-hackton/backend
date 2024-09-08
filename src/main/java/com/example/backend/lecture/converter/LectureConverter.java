@@ -1,10 +1,10 @@
-package com.example.backend.lecture.entity.dto;
+package com.example.backend.lecture.converter;
 
 import com.example.backend.lecture.entity.Lecture;
 import com.example.backend.lecture.entity.dto.request.CreateLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 
-public class LectureDtoConverter {
+public class LectureConverter {
 
     public static Lecture createLectureConverter(CreateLectureRequestDTO req){
         return Lecture.builder()
