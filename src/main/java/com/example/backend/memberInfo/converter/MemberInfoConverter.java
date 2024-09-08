@@ -7,11 +7,12 @@ import com.example.backend.memberInfo.entity.dto.response.MemberInfoDetailRespon
 
 public class MemberInfoConverter {
 
-    public static MemberInfo editMemberInfoConverter(EditMemberInfoRequestDTO req, Member member){
+    public static MemberInfo editMemberInfoConverter(EditMemberInfoRequestDTO req, Member member, String tag){
         return MemberInfo.builder()
                 .id(member.getMemberInfo().getId())
                 .member(member)
                 .nickname(req.getNickname())
+                .tag(tag)
                 .introduction(req.getIntroduction())
                 .build();
     }
