@@ -34,6 +34,20 @@ public class MemberInfoService {
     private static final Logger logger = LoggerFactory.getLogger(MemberInfoService.class);
 
     @Transactional
+    public void initMemberInfo(String email){
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if(member == null){
+            logger.warn("사용자 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
+        }
+        String tag = randomTag("사용자");
+
+        MemberInfo memberInfo = MemberInfoConverter.initMemberInfoConverter(member, tag);
+        memberInfoRepository.save(memberInfo);
+
+    }
+
+    @Transactional
     public MemberInfoDetailResponseDTO editMemberInfo(EditMemberInfoRequestDTO req, String email, MultipartFile image){
         Member member = memberRepository.findByEmail(email).orElse(null);
         if(member == null){
@@ -43,12 +57,7 @@ public class MemberInfoService {
         String tag = member.getMemberInfo().getTag();
         // 기존 닉네임과 다르다면
         if (!req.getNickname().equals(member.getMemberInfo().getNickname())){
-            tag = "0000";
-            // 태그가 겹치지 않을 때까지
-            while (memberInfoRepository.existsByNicknameAndTag(req.getNickname(), tag)){
-                tag = RandomStringUtils.randomNumeric(4);
-            }
-
+            tag = randomTag(req.getNickname());
         }
         // 객체 변환
         MemberInfo memberInfo = MemberInfoConverter.editMemberInfoConverter(req, member, tag);
@@ -61,6 +70,15 @@ public class MemberInfoService {
         // 저장
         MemberInfo saveMemberInfo = memberInfoRepository.save(memberInfo);
         return MemberInfoConverter.memberInfoDetailConverter(saveMemberInfo);
+    }
+
+    private String randomTag(String nickname){
+        String tag = "0000";
+        // 태그가 겹치지 않을 때까지
+        while (memberInfoRepository.existsByNicknameAndTag(nickname, tag)){
+            tag = RandomStringUtils.randomNumeric(4);
+        }
+        return tag;
     }
 
 }

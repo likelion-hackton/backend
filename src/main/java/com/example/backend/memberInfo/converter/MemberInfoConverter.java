@@ -7,6 +7,15 @@ import com.example.backend.memberInfo.entity.dto.response.MemberInfoDetailRespon
 
 public class MemberInfoConverter {
 
+    public static MemberInfo initMemberInfoConverter(Member member, String tag){
+        return MemberInfo.builder()
+                .nickname("사용자")
+                .tag(tag)
+                .member(member)
+                .memberInfoImage(null)
+                .build();
+    }
+
     public static MemberInfo editMemberInfoConverter(EditMemberInfoRequestDTO req, Member member, String tag){
         return MemberInfo.builder()
                 .id(member.getMemberInfo().getId())
