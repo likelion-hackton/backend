@@ -2,7 +2,7 @@ package com.example.backend.member.service;
 
 import com.example.backend.common.jwt.JwtTokenUtil;
 import com.example.backend.common.jwt.refresh.entity.RefreshToken;
-import com.example.backend.common.jwt.refresh.entity.RefreshTokenConverter;
+import com.example.backend.common.jwt.refresh.converter.RefreshTokenConverter;
 import com.example.backend.common.jwt.refresh.repository.RefreshTokenRepository;
 import com.example.backend.email.EmailSenderService;
 import com.example.backend.email.EmailVerifyService;

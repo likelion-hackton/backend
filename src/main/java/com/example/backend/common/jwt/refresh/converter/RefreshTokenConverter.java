@@ -1,5 +1,6 @@
-package com.example.backend.common.jwt.refresh.entity;
+package com.example.backend.common.jwt.refresh.converter;
 
+import com.example.backend.common.jwt.refresh.entity.RefreshToken;
 import com.example.backend.member.entity.Member;
 
 import java.time.Instant;
