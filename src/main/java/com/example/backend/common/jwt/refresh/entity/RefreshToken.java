@@ -3,10 +3,7 @@ package com.example.backend.common.jwt.refresh.entity;
 import com.example.backend.member.entity.Member;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Instant;
 
@@ -14,6 +11,7 @@ import java.time.Instant;
 @Table(name = "RefreshToken")
 @Builder
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class RefreshToken {

@@ -109,8 +109,19 @@ public class MemberService {
 
         // DB에 저장하기 적합한 Instant 형으로 만료시간 저장
         Instant instant = Instant.now().plusMillis(refreshExpirationTime);
+
         // 토큰 생성 저장 후 전송
         String refreshToken = JwtTokenUtil.createRefreshToken(member.getEmail(), secretKey, refreshExpirationTime);
+
+        // 멤버가 이미 토큰을 보유했는지
+        Optional<RefreshToken> existingToken = refreshTokenRepository.findByMember(member);
+
+        if(existingToken.isPresent()){
+            RefreshToken token = existingToken.get();
+            token.setRefreshToken(refreshToken);
+            token.setRefreshExpiresTime(instant);
+            return refreshTokenRepository.save(token);
+        }
         return refreshTokenRepository.save(RefreshTokenConverter.createTokenConverter(refreshToken, member, instant));
     }
 
