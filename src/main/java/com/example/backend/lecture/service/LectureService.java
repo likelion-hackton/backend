@@ -3,7 +3,7 @@ package com.example.backend.lecture.service;
 import com.example.backend.image.service.ImageService;
 import com.example.backend.lecture.entity.Lecture;
 import com.example.backend.lecture.entity.LectureImage;
-import com.example.backend.lecture.entity.dto.LectureDtoConverter;
+import com.example.backend.lecture.converter.LectureConverter;
 import com.example.backend.lecture.entity.dto.request.CreateLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.repository.LectureRepository;
@@ -49,7 +49,7 @@ public class LectureService {
             logger.warn("접근 권한 없음");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "접근 권한 없음");
         }*/
-        Lecture lecture = LectureDtoConverter.createLectureConverter(req);
+        Lecture lecture = LectureConverter.createLectureConverter(req);
 
         imageService.procesAndAddImages(lecture, images,
                 url -> {
@@ -60,6 +60,6 @@ public class LectureService {
 
         Lecture saveLecture = lectureRepository.save(lecture);
         participantRepository.save(ParticipantDtoConverter.createParticipantConverter(member, saveLecture));
-        return LectureDtoConverter.lectureDetailConverter(saveLecture);
+        return LectureConverter.lectureDetailConverter(saveLecture);
     }
 }
