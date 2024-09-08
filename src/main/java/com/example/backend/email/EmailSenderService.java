@@ -5,14 +5,12 @@ import org.springframework.context.annotation.Primary;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
 @Service
-@Transactional
 @Primary
 @RequiredArgsConstructor
 public class EmailSenderService {

@@ -5,7 +5,6 @@ import com.example.backend.storage.service.StorageService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
@@ -13,7 +12,6 @@ import java.util.function.BiConsumer;
 import java.util.function.Function;
 
 @Service
-@Transactional
 @Primary
 @RequiredArgsConstructor
 public class ImageService {

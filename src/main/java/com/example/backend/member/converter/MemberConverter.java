@@ -1,4 +1,4 @@
-package com.example.backend.member.entity.dto;
+package com.example.backend.member.converter;
 
 import com.example.backend.member.entity.Member;
 import com.example.backend.member.entity.dto.request.EmailVerifyRequestDTO;
@@ -10,7 +10,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 
-public class MemberDtoConverter {
+public class MemberConverter {
 
     // 회원가입 요청을 멤버 Entity로 변환
     public static Member signupReqeustConverter(SignupRequestDTO req){

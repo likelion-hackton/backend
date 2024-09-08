@@ -2,12 +2,12 @@ package com.example.backend.member.service;
 
 import com.example.backend.common.jwt.JwtTokenUtil;
 import com.example.backend.common.jwt.refresh.entity.RefreshToken;
-import com.example.backend.common.jwt.refresh.entity.RefreshTokenConverter;
+import com.example.backend.common.jwt.refresh.converter.RefreshTokenConverter;
 import com.example.backend.common.jwt.refresh.repository.RefreshTokenRepository;
 import com.example.backend.email.EmailSenderService;
 import com.example.backend.email.EmailVerifyService;
 import com.example.backend.member.entity.Member;
-import com.example.backend.member.entity.dto.MemberDtoConverter;
+import com.example.backend.member.converter.MemberConverter;
 import com.example.backend.member.entity.dto.request.EmailVerifyRequestDTO;
 import com.example.backend.member.entity.dto.request.LoginRequestDTO;
 import com.example.backend.member.entity.dto.request.RefreshRequestDTO;
@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +30,6 @@ import java.time.Instant;
 import java.util.Optional;
 
 @Service
-@Transactional
 @Primary
 @RequiredArgsConstructor
 public class MemberService {
@@ -52,6 +50,7 @@ public class MemberService {
     private String secretKey;
 
     // 회원가입
+    @Transactional
     public void signupMember(SignupRequestDTO req){
         if(!emailVerifyService.verifyCode(req.getEmail(), req.getVerification())){
             logger.warn("유효하지 않은 인증코드");
@@ -67,7 +66,7 @@ public class MemberService {
         }
         // 패스워드 인코딩 후 저장
         req.setPassword(passwordEncoder.encode(req.getPassword()));
-        memberRepository.save(MemberDtoConverter.signupReqeustConverter(req));
+        memberRepository.save(MemberConverter.signupReqeustConverter(req));
     }
 
     // 이메일 중복 확인
@@ -79,10 +78,11 @@ public class MemberService {
     public EmailVerifyResponseDTO sendVerificationEmail(EmailVerifyRequestDTO req){
         // 이메일 전송
         emailSenderService.sendVerification(req.getEmail(), emailVerifyService.generateVerificationCode(req.getEmail()));
-        return MemberDtoConverter.emailVerifyResponseConverter(req);
+        return MemberConverter.emailVerifyResponseConverter(req);
     }
 
     // 로그인
+    @Transactional
     public JwtTokenResponseDTO login(LoginRequestDTO req){
         // 사용자 존재 여부 확인
         Member member = memberRepository.findByEmail(req.getEmail()).orElse(null);
@@ -96,7 +96,7 @@ public class MemberService {
         }
 
         // 토큰 반환
-        return MemberDtoConverter.jwtTokenResponseConverter(
+        return MemberConverter.jwtTokenResponseConverter(
                 JwtTokenUtil.createToken(member.getEmail(), secretKey, expirationTime),
                 expirationTime.toString(),
                 createRefreshToken(member).getRefreshToken(),
@@ -105,6 +105,7 @@ public class MemberService {
     }
 
     // Refresh Token 생성
+    @Transactional
     public RefreshToken createRefreshToken(Member member){
 
         // DB에 저장하기 적합한 Instant 형으로 만료시간 저장
@@ -126,6 +127,7 @@ public class MemberService {
     }
 
     // Refresh Token 유효 확인
+    @Transactional
     public JwtTokenResponseDTO verifyRefreshToken(RefreshRequestDTO req){
         // 토큰 존재 확인
         RefreshToken refreshToken = refreshTokenRepository.findByRefreshToken(req.getRefresh_token()).orElse(null);
@@ -144,7 +146,7 @@ public class MemberService {
         String email = JwtTokenUtil.getEmail(req.getRefresh_token(), secretKey);
 
         // Access Token 다시 발급 후 전송
-        return MemberDtoConverter.jwtTokenResponseConverter(
+        return MemberConverter.jwtTokenResponseConverter(
                 JwtTokenUtil.createToken(email, secretKey, expirationTime),
                 expirationTime.toString(),
                 req.getRefresh_token(),
@@ -153,6 +155,7 @@ public class MemberService {
     }
 
     // 로그아웃
+    @Transactional
     public void logout(String email){
         // 멤버 존재 확인
         Member member = memberRepository.findByEmail(email).orElse(null);
