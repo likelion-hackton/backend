@@ -31,7 +31,6 @@ import java.time.Instant;
 import java.util.Optional;
 
 @Service
-@Transactional
 @Primary
 @RequiredArgsConstructor
 public class MemberService {
@@ -52,6 +51,7 @@ public class MemberService {
     private String secretKey;
 
     // 회원가입
+    @Transactional
     public void signupMember(SignupRequestDTO req){
         if(!emailVerifyService.verifyCode(req.getEmail(), req.getVerification())){
             logger.warn("유효하지 않은 인증코드");
@@ -83,6 +83,7 @@ public class MemberService {
     }
 
     // 로그인
+    @Transactional
     public JwtTokenResponseDTO login(LoginRequestDTO req){
         // 사용자 존재 여부 확인
         Member member = memberRepository.findByEmail(req.getEmail()).orElse(null);
@@ -105,6 +106,7 @@ public class MemberService {
     }
 
     // Refresh Token 생성
+    @Transactional
     public RefreshToken createRefreshToken(Member member){
 
         // DB에 저장하기 적합한 Instant 형으로 만료시간 저장
@@ -126,6 +128,7 @@ public class MemberService {
     }
 
     // Refresh Token 유효 확인
+    @Transactional
     public JwtTokenResponseDTO verifyRefreshToken(RefreshRequestDTO req){
         // 토큰 존재 확인
         RefreshToken refreshToken = refreshTokenRepository.findByRefreshToken(req.getRefresh_token()).orElse(null);
@@ -153,6 +156,7 @@ public class MemberService {
     }
 
     // 로그아웃
+    @Transactional
     public void logout(String email){
         // 멤버 존재 확인
         Member member = memberRepository.findByEmail(email).orElse(null);
