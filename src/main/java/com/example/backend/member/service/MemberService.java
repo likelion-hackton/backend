@@ -7,7 +7,7 @@ import com.example.backend.common.jwt.refresh.repository.RefreshTokenRepository;
 import com.example.backend.email.EmailSenderService;
 import com.example.backend.email.EmailVerifyService;
 import com.example.backend.member.entity.Member;
-import com.example.backend.member.entity.dto.MemberDtoConverter;
+import com.example.backend.member.converter.MemberConverter;
 import com.example.backend.member.entity.dto.request.EmailVerifyRequestDTO;
 import com.example.backend.member.entity.dto.request.LoginRequestDTO;
 import com.example.backend.member.entity.dto.request.RefreshRequestDTO;
@@ -21,7 +21,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.HttpStatusCode;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -67,7 +66,7 @@ public class MemberService {
         }
         // 패스워드 인코딩 후 저장
         req.setPassword(passwordEncoder.encode(req.getPassword()));
-        memberRepository.save(MemberDtoConverter.signupReqeustConverter(req));
+        memberRepository.save(MemberConverter.signupReqeustConverter(req));
     }
 
     // 이메일 중복 확인
@@ -79,7 +78,7 @@ public class MemberService {
     public EmailVerifyResponseDTO sendVerificationEmail(EmailVerifyRequestDTO req){
         // 이메일 전송
         emailSenderService.sendVerification(req.getEmail(), emailVerifyService.generateVerificationCode(req.getEmail()));
-        return MemberDtoConverter.emailVerifyResponseConverter(req);
+        return MemberConverter.emailVerifyResponseConverter(req);
     }
 
     // 로그인
@@ -97,7 +96,7 @@ public class MemberService {
         }
 
         // 토큰 반환
-        return MemberDtoConverter.jwtTokenResponseConverter(
+        return MemberConverter.jwtTokenResponseConverter(
                 JwtTokenUtil.createToken(member.getEmail(), secretKey, expirationTime),
                 expirationTime.toString(),
                 createRefreshToken(member).getRefreshToken(),
@@ -147,7 +146,7 @@ public class MemberService {
         String email = JwtTokenUtil.getEmail(req.getRefresh_token(), secretKey);
 
         // Access Token 다시 발급 후 전송
-        return MemberDtoConverter.jwtTokenResponseConverter(
+        return MemberConverter.jwtTokenResponseConverter(
                 JwtTokenUtil.createToken(email, secretKey, expirationTime),
                 expirationTime.toString(),
                 req.getRefresh_token(),
