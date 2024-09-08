@@ -46,6 +46,8 @@ public class MemberInfoService {
                     memberInfoImage.setImageUrl(url);
                     return memberInfoImage;
                 }, MemberInfo::addImage);
+        if (memberInfoRepository.existsByNickname(memberInfo.getNickname())) {
+        }
         MemberInfo saveMemberInfo = memberInfoRepository.save(memberInfo);
         return MemberInfoConverter.memberInfoDetailConverter(saveMemberInfo);
     }

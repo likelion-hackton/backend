@@ -18,9 +18,9 @@ public class MemberInfoConverter {
 
     public static MemberInfoDetailResponseDTO memberInfoDetailConverter(MemberInfo memberInfo){
         MemberInfoDetailResponseDTO dto = new MemberInfoDetailResponseDTO();
-        dto.setNickname(memberInfo.getNickname());
+        dto.setNickname(memberInfo.getNickname() + "#" + memberInfo.getTag());
         dto.setIntroduction(memberInfo.getIntroduction());
-        dto.setImageUrl(memberInfo.getImage());
+        dto.setImageUrl(memberInfo.getMemberInfoImage().getImageUrl());
         return dto;
     }
 }

@@ -31,6 +31,9 @@ public class MemberInfo {
     @NotBlank
     private String nickname;
 
+    @NotBlank
+    private String tag;
+
     private String introduction;
 
     @JsonManagedReference
