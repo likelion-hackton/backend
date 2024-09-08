@@ -35,6 +35,9 @@ dependencies {
 	//이메일 전송
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
+	//spring-doc-swagger
+	implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
+
 	//Spring security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
 
