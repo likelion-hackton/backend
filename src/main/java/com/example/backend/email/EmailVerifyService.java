@@ -13,7 +13,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 @Service
-@Transactional
 @Primary
 public class EmailVerifyService {
     // 코드 저장
