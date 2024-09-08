@@ -3,7 +3,6 @@ package com.example.backend.email;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.time.Duration;
 import java.util.Map;
