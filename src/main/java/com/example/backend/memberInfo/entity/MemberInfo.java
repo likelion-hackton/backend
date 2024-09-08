@@ -3,6 +3,7 @@ package com.example.backend.memberInfo.entity;
 import com.example.backend.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
@@ -32,5 +33,12 @@ public class MemberInfo {
 
     private String introduction;
 
-    private String image;
+    @JsonManagedReference
+    @OneToOne(mappedBy = "memberInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private MemberInfoImage memberInfoImage;
+
+    public void addImage(MemberInfoImage image) {
+        memberInfoImage = image;
+        image.setMemberInfo(this);
+    }
 }
