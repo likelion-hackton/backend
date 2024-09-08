@@ -10,6 +10,7 @@ import com.example.backend.memberInfo.entity.dto.request.EditMemberInfoRequestDT
 import com.example.backend.memberInfo.entity.dto.response.MemberInfoDetailResponseDTO;
 import com.example.backend.memberInfo.repository.MemberInfoRepository;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Primary;
@@ -39,15 +40,25 @@ public class MemberInfoService {
             logger.warn("사용자 찾을 수 없음");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
         }
-        MemberInfo memberInfo = MemberInfoConverter.editMemberInfoConverter(req, member);
+        String tag = member.getMemberInfo().getTag();
+        // 기존 닉네임과 다르다면
+        if (!req.getNickname().equals(member.getMemberInfo().getNickname())){
+            tag = "0000";
+            // 태그가 겹치지 않을 때까지
+            while (memberInfoRepository.existsByNicknameAndTag(req.getNickname(), tag)){
+                tag = RandomStringUtils.randomNumeric(4);
+            }
+
+        }
+        // 객체 변환
+        MemberInfo memberInfo = MemberInfoConverter.editMemberInfoConverter(req, member, tag);
         imageService.procesAndAddImages(memberInfo, List.of(image),
                 url -> {
                     MemberInfoImage memberInfoImage = new MemberInfoImage();
                     memberInfoImage.setImageUrl(url);
                     return memberInfoImage;
                 }, MemberInfo::addImage);
-        if (memberInfoRepository.existsByNickname(memberInfo.getNickname())) {
-        }
+        // 저장
         MemberInfo saveMemberInfo = memberInfoRepository.save(memberInfo);
         return MemberInfoConverter.memberInfoDetailConverter(saveMemberInfo);
     }
