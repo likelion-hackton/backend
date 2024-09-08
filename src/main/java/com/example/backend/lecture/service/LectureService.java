@@ -9,7 +9,7 @@ import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.repository.LectureRepository;
 import com.example.backend.member.entity.Member;
 import com.example.backend.member.repository.MemberRepository;
-import com.example.backend.participant.entity.dto.ParticipantDtoConverter;
+import com.example.backend.participant.converter.ParticipantConverter;
 import com.example.backend.participant.repository.ParticipantRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
@@ -59,7 +59,7 @@ public class LectureService {
                 }, Lecture::addImage);
 
         Lecture saveLecture = lectureRepository.save(lecture);
-        participantRepository.save(ParticipantDtoConverter.createParticipantConverter(member, saveLecture));
+        participantRepository.save(ParticipantConverter.createParticipantConverter(member, saveLecture));
         return LectureConverter.lectureDetailConverter(saveLecture);
     }
 }
