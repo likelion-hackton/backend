@@ -7,6 +7,7 @@ import com.example.backend.member.entity.dto.request.SignupRequestDTO;
 import com.example.backend.member.entity.dto.response.EmailVerifyResponseDTO;
 import com.example.backend.member.entity.dto.response.JwtTokenResponseDTO;
 import com.example.backend.member.service.MemberService;
+import com.example.backend.memberInfo.service.MemberInfoService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,7 @@ import org.springframework.web.server.ResponseStatusException;
 @RequestMapping("/api/member")
 public class MemberController {
     private final MemberService memberService;
+    private final MemberInfoService memberInfoService;
 
     // 인증메일 전송
     @PostMapping("/send-verification")
@@ -34,6 +36,7 @@ public class MemberController {
     @ResponseBody
     public ResponseEntity<String> signup(@Valid @RequestBody SignupRequestDTO req){
         memberService.signupMember(req);
+        memberInfoService.initMemberInfo(req.getEmail());
         return ResponseEntity.ok("회원가입 성공");
     }
 
