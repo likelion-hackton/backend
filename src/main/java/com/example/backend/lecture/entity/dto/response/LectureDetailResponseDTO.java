@@ -32,6 +32,4 @@ public class LectureDetailResponseDTO {
 
     @NotBlank(message = "강의 위치가 비어있습니다.")
     private String location;
-
-    // 후에 이미지 url 추가
 }
