@@ -1,6 +1,8 @@
 package com.example.backend.member.entity;
 
+import com.example.backend.participant.entity.Participant;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -8,6 +10,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+
+import java.util.List;
 
 @Entity
 @Table(name = "Member")
@@ -32,4 +36,8 @@ public class Member {
 
     @NotBlank
     private String permission;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Participant> participants;
 }

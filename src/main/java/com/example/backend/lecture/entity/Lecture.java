@@ -1,11 +1,15 @@
 package com.example.backend.lecture.entity;
 
+import com.example.backend.participant.entity.Participant;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 @Entity
 @Table(name = "Lecture")
@@ -40,4 +44,20 @@ public class Lecture {
 
     @NotBlank
     private String location;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Participant> participants;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<LectureImage> lectureImages = new ArrayList<>();
+
+    public void addImage(LectureImage image) {
+        if (lectureImages == null) {
+            lectureImages = new ArrayList<>();
+        }
+        lectureImages.add(image);
+        image.setLecture(this);
+    }
 }
