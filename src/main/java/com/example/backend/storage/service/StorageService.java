@@ -49,4 +49,18 @@ public class StorageService {
         }
     }
 
+    // 이미지 삭제
+    public void deleteFile(String fileUrl) {
+        try {
+            String fileName = Paths.get(new java.net.URI(fileUrl).getPath()).getFileName().toString();
+
+            Path filePath = this.storageLocation.resolve(fileName).normalize();
+            Files.deleteIfExists(filePath);
+        } catch (IOException | java.net.URISyntaxException e) {
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 삭제 실패");
+        }
+    }
+
+
+
 }

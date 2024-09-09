@@ -59,7 +59,7 @@ public class JwtTokenFilter extends OncePerRequestFilter {
         }
 
         // 권한 추출
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + memberByEmail.getPermission());
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("ROLE_" + memberByEmail.getMemberInfo().getPermission());
         List<SimpleGrantedAuthority> authorities = Collections.singletonList(authority);
 
         // 토큰 설정

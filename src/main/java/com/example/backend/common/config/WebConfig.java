@@ -14,9 +14,9 @@ public class WebConfig implements WebMvcConfigurer {
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // 적용 url 패턴
                 .allowedOrigins("*") // 허용된 Origin
-                .allowedMethods("*") // 허용된 Http Methods
+                .allowedMethods("GET", "POST", "PATCH", "DELETE") // 허용된 Http Methods
                 .allowedHeaders("*") // 허용된 Header
-                .exposedHeaders("*") // 허용된 Header 값
+                .exposedHeaders("Authorization") // 허용된 Header 값
                 .allowCredentials(false) // 쿠키 인증 요청
                 .maxAge(3600); // request 캐싱 시간
     }

@@ -1,5 +1,6 @@
 package com.example.backend.member.entity;
 
+import com.example.backend.memberInfo.entity.MemberInfo;
 import com.example.backend.participant.entity.Participant;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -34,10 +35,11 @@ public class Member {
     @NotBlank
     private String password;
 
-    @NotBlank
-    private String permission;
-
     @JsonManagedReference
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Participant> participants;
+
+    @JsonManagedReference
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private MemberInfo memberInfo;
 }
