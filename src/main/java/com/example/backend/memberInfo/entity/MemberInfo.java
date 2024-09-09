@@ -34,6 +34,9 @@ public class MemberInfo {
 
     private String introduction;
 
+    @NotBlank
+    private String permission;
+
     @JsonManagedReference
     @OneToOne(mappedBy = "memberInfo", cascade = CascadeType.ALL, fetch = FetchType.LAZY, orphanRemoval = true)
     private MemberInfoImage memberInfoImage;

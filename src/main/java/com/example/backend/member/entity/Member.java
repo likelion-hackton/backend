@@ -35,9 +35,6 @@ public class Member {
     @NotBlank
     private String password;
 
-    @NotBlank
-    private String permission;
-
     @JsonManagedReference
     @OneToMany(mappedBy = "member", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Participant> participants;
