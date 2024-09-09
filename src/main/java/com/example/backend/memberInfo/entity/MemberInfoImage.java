@@ -20,6 +20,6 @@ public class MemberInfoImage extends BaseImage {
 
     @JsonBackReference
     @OneToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "memberInfo_id")
+    @JoinColumn(name = "member_info_id", unique = true)
     private MemberInfo memberInfo;
 }
