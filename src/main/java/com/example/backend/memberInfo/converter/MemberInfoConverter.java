@@ -12,6 +12,7 @@ public class MemberInfoConverter {
                 .nickname("사용자")
                 .tag(tag)
                 .introduction("")
+                .permission("USER")
                 .member(member)
                 .memberInfoImage(null)
                 .build();
@@ -20,6 +21,7 @@ public class MemberInfoConverter {
     public static MemberInfo editMemberInfoConverter(EditMemberInfoRequestDTO req, MemberInfo existingInfo, String tag){
         existingInfo.setNickname(req.getNickname());
         existingInfo.setTag(tag);
+        existingInfo.setPermission(req.getPermission());
         existingInfo.setIntroduction(req.getIntroduction() != null ? req.getIntroduction() : "");
         return existingInfo;
     }
@@ -29,6 +31,7 @@ public class MemberInfoConverter {
         dto.setNickname(memberInfo.getNickname() + "#" + memberInfo.getTag());
         dto.setIntroduction(memberInfo.getIntroduction() != null ? memberInfo.getIntroduction() : "");
         dto.setImageUrl(memberInfo.getMemberInfoImage() != null ? memberInfo.getMemberInfoImage().getImageUrl() : null);
+        dto.setPermission(memberInfo.getPermission());
         return dto;
     }
 }
