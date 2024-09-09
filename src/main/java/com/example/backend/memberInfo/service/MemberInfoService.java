@@ -37,6 +37,20 @@ public class MemberInfoService {
 
     private static final Logger logger = LoggerFactory.getLogger(MemberInfoService.class);
 
+    public MemberInfoDetailResponseDTO getMemberInfo(String email) {
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if (member == null) {
+            logger.warn("사용자 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
+        }
+        MemberInfo memberInfo = memberInfoRepository.findByMember(member).orElse(null);
+        if (memberInfo == null) {
+            logger.warn("사용자 정보 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 정보 찾을 수 없음");
+        }
+        return MemberInfoConverter.memberInfoDetailConverter(memberInfo);
+    }
+
     @Transactional
     public void initMemberInfo(String email){
         Member member = memberRepository.findByEmail(email).orElse(null);
@@ -79,8 +93,12 @@ public class MemberInfoService {
 
         memberInfoRepository.flush();
 
-        MemberInfo updateMemberInfo = memberInfoRepository.findById(memberInfo.getId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "업데이트 사용자 정보 불러오기 실패"));
+        MemberInfo updateMemberInfo = memberInfoRepository.findById(memberInfo.getId()).orElse(null);
+
+        if(updateMemberInfo == null){
+            logger.warn("업데이트 사용자 정보 불러오기 실패");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "업데이트 사용자 정보 불러오기 실패");
+        }
 
         // 저장
         MemberInfo saveMemberInfo = memberInfoRepository.save(updateMemberInfo);

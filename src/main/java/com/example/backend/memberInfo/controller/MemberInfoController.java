@@ -8,10 +8,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
-import org.springframework.web.bind.annotation.PatchMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestPart;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 @RestController
@@ -27,6 +24,11 @@ public class MemberInfoController {
                                                                 Authentication auth){
         String email = auth.getName();
         return ResponseEntity.ok(memberInfoService.editMemberInfo(req, email ,image));
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<MemberInfoDetailResponseDTO> getInfo(Authentication auth){
+        return ResponseEntity.ok(memberInfoService.getMemberInfo(auth.getName()));
     }
 
 }
