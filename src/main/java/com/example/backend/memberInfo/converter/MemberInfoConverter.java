@@ -11,26 +11,24 @@ public class MemberInfoConverter {
         return MemberInfo.builder()
                 .nickname("사용자")
                 .tag(tag)
+                .introduction("")
                 .member(member)
                 .memberInfoImage(null)
                 .build();
     }
 
-    public static MemberInfo editMemberInfoConverter(EditMemberInfoRequestDTO req, Member member, String tag){
-        return MemberInfo.builder()
-                .id(member.getMemberInfo().getId())
-                .member(member)
-                .nickname(req.getNickname())
-                .tag(tag)
-                .introduction(req.getIntroduction())
-                .build();
+    public static MemberInfo editMemberInfoConverter(EditMemberInfoRequestDTO req, MemberInfo existingInfo, String tag){
+        existingInfo.setNickname(req.getNickname());
+        existingInfo.setTag(tag);
+        existingInfo.setIntroduction(req.getIntroduction() != null ? req.getIntroduction() : "");
+        return existingInfo;
     }
 
     public static MemberInfoDetailResponseDTO memberInfoDetailConverter(MemberInfo memberInfo){
         MemberInfoDetailResponseDTO dto = new MemberInfoDetailResponseDTO();
         dto.setNickname(memberInfo.getNickname() + "#" + memberInfo.getTag());
         dto.setIntroduction(memberInfo.getIntroduction());
-        dto.setImageUrl(memberInfo.getMemberInfoImage().getImageUrl());
+        dto.setImageUrl(memberInfo.getMemberInfoImage().getImageUrl() != null ? memberInfo.getMemberInfoImage().getImageUrl() : null);
         return dto;
     }
 }
