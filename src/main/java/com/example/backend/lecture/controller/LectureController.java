@@ -1,6 +1,7 @@
 package com.example.backend.lecture.controller;
 
 import com.example.backend.lecture.entity.dto.request.CreateLectureRequestDTO;
+import com.example.backend.lecture.entity.dto.request.JoinLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
 import com.example.backend.lecture.service.LectureService;
@@ -26,6 +27,11 @@ public class LectureController {
                                                                   Authentication auth){
         String email = auth.getName();
         return ResponseEntity.ok(lectureService.createLecture(req, email, images));
+    }
+
+    @PostMapping("/join")
+    public ResponseEntity<LectureDetailResponseDTO> joinLecture(@Valid JoinLectureRequestDTO req, Authentication auth){
+        return ResponseEntity.ok(lectureService.joinLecture(req.getLectureId(), auth.getName()));
     }
 
     @GetMapping("/all")
