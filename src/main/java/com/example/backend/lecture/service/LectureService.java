@@ -70,4 +70,21 @@ public class LectureService {
                 .map(LectureConverter::lectureListConverter)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public LectureDetailResponseDTO joinLecture(Long lectureId, String email){
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if(member == null){
+            logger.warn("사용자 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
+        }
+        Lecture lecture = lectureRepository.findById(lectureId).orElse(null);
+        if(lecture == null){
+            logger.warn("강의 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "강의 찾을 수 없음");
+        }
+
+        participantRepository.save(ParticipantConverter.joinParticipantConverter(member, lecture));
+        return LectureConverter.lectureDetailConverter(lecture);
+    }
 }
