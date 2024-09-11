@@ -1,5 +1,6 @@
 package com.example.backend.lecture.entity.dto.response;
 
+import com.example.backend.lecture.entity.LectureImage;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -7,6 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.Instant;
+import java.util.List;
 
 @Getter
 @Setter
@@ -26,5 +28,5 @@ public class LectureListResponseDTO {
     private String type;
 
     @NotBlank(message = "이미지 주소가 비어있습니다.")
-    private String imageUrl;
+    private List<LectureImage> imageUrl;
 }

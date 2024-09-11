@@ -65,9 +65,9 @@ public class LectureService {
         return LectureConverter.lectureDetailConverter(saveLecture);
     }
 
-    public LectureListResponseDTO getAllLecture(){
+    public List<LectureListResponseDTO> getAllLecture(){
         return lectureRepository.findAll().stream()
-                .map()
+                .map(LectureConverter::lectureListConverter)
                 .collect(Collectors.toList());
     }
 }
