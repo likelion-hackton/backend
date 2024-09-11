@@ -29,6 +29,11 @@ public class LectureController {
         return ResponseEntity.ok(lectureService.createLecture(req, email, images));
     }
 
+    @GetMapping("/own")
+    public ResponseEntity<List<LectureListResponseDTO>> getMyLecture(Authentication auth){
+        return ResponseEntity.ok(lectureService.getMyLecture(auth.getName()));
+    }
+
     @PostMapping("/join")
     public ResponseEntity<LectureDetailResponseDTO> joinLecture(@Valid JoinLectureRequestDTO req, Authentication auth){
         return ResponseEntity.ok(lectureService.joinLecture(req.getLectureId(), auth.getName()));
