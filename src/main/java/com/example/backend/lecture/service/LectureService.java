@@ -71,6 +71,17 @@ public class LectureService {
                 .collect(Collectors.toList());
     }
 
+    public List<LectureListResponseDTO> getMyLecture(String email){
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if(member == null){
+            logger.warn("사용자 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
+        }
+        return participantRepository.findLecturesByMemberId(member.getId()).stream()
+                .map(LectureConverter::lectureListConverter)
+                .collect(Collectors.toList());
+    }
+
     @Transactional
     public LectureDetailResponseDTO joinLecture(Long lectureId, String email){
         Member member = memberRepository.findByEmail(email).orElse(null);
