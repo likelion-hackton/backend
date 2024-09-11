@@ -14,4 +14,12 @@ public class ParticipantConverter {
                 .role("CREATOR")
                 .build();
     }
+
+    public static Participant joinParticipantConverter(Member member, Lecture lecture){
+        return Participant.builder()
+                .member(member)
+                .lecture(lecture)
+                .role("USER")
+                .build();
+    }
 }
