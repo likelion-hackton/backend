@@ -6,6 +6,7 @@ import com.example.backend.lecture.entity.LectureImage;
 import com.example.backend.lecture.converter.LectureConverter;
 import com.example.backend.lecture.entity.dto.request.CreateLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
+import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
 import com.example.backend.lecture.repository.LectureRepository;
 import com.example.backend.member.entity.Member;
 import com.example.backend.member.repository.MemberRepository;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Primary
@@ -61,5 +63,11 @@ public class LectureService {
         Lecture saveLecture = lectureRepository.save(lecture);
         participantRepository.save(ParticipantConverter.createParticipantConverter(member, saveLecture));
         return LectureConverter.lectureDetailConverter(saveLecture);
+    }
+
+    public LectureListResponseDTO getAllLecture(){
+        return lectureRepository.findAll().stream()
+                .map()
+                .collect(Collectors.toList());
     }
 }
