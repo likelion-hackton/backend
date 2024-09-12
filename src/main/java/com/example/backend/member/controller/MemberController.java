@@ -1,9 +1,6 @@
 package com.example.backend.member.controller;
 
-import com.example.backend.member.entity.dto.request.EmailVerifyRequestDTO;
-import com.example.backend.member.entity.dto.request.LoginRequestDTO;
-import com.example.backend.member.entity.dto.request.RefreshRequestDTO;
-import com.example.backend.member.entity.dto.request.SignupRequestDTO;
+import com.example.backend.member.entity.dto.request.*;
 import com.example.backend.member.entity.dto.response.EmailVerifyResponseDTO;
 import com.example.backend.member.entity.dto.response.JwtTokenResponseDTO;
 import com.example.backend.member.service.MemberService;
@@ -29,6 +26,13 @@ public class MemberController {
     public ResponseEntity<EmailVerifyResponseDTO> sendVerification(@Valid @RequestBody EmailVerifyRequestDTO req){
         EmailVerifyResponseDTO dto = memberService.sendVerificationEmail(req);
         return ResponseEntity.ok(dto);
+    }
+
+    // 인증코드 검증
+    @PostMapping("/verify")
+    public ResponseEntity<String> verifyCode(@Valid @RequestBody VerifyCodeRequestDTO req){
+        memberService.verifyCode(req);
+        return ResponseEntity.ok("인증성공");
     }
 
     // 회원가입
