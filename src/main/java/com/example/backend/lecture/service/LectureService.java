@@ -98,12 +98,12 @@ public class LectureService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "강의 찾을 수 없음");
         }
         if (participantRepository.existsByLectureAndMember(lecture, member)){
-            logger.warn("이미 참가한 강의입니다.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 참가한 강의입니다.");
+            logger.warn("이미 참가한 강의");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 참가한 강의");
         }
         if (participantRepository.countByLecture(lecture) >= lecture.getMember_limit()) {
-            logger.warn("강의 정원이 가득 찼습니다.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "강의 정원이 가득 찼습니다.");
+            logger.warn("강의 정원 가득참");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "강의 정원 가득참");
         }
 
         participantRepository.save(ParticipantConverter.joinParticipantConverter(member, lecture));
