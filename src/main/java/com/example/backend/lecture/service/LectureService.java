@@ -6,6 +6,7 @@ import com.example.backend.lecture.entity.LectureImage;
 import com.example.backend.lecture.converter.LectureConverter;
 import com.example.backend.lecture.entity.dto.request.CreateLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
+import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
 import com.example.backend.lecture.repository.LectureRepository;
 import com.example.backend.member.entity.Member;
 import com.example.backend.member.repository.MemberRepository;
@@ -22,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 @Primary
@@ -61,5 +63,50 @@ public class LectureService {
         Lecture saveLecture = lectureRepository.save(lecture);
         participantRepository.save(ParticipantConverter.createParticipantConverter(member, saveLecture));
         return LectureConverter.lectureDetailConverter(saveLecture);
+    }
+
+    // 모든 강의 조회
+    public List<LectureListResponseDTO> getAllLecture(){
+        return lectureRepository.findAll().stream()
+                .map(LectureConverter::lectureListConverter)
+                .collect(Collectors.toList());
+    }
+
+    // 내가 참가한 강의 조회
+    public List<LectureListResponseDTO> getMyLecture(String email){
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if(member == null){
+            logger.warn("사용자 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
+        }
+        return participantRepository.findLecturesByMemberId(member.getId()).stream()
+                .map(LectureConverter::lectureListConverter)
+                .collect(Collectors.toList());
+    }
+
+    // 강의 참가
+    @Transactional
+    public LectureDetailResponseDTO joinLecture(Long lectureId, String email){
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if(member == null){
+            logger.warn("사용자 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
+        }
+        Lecture lecture = lectureRepository.findById(lectureId).orElse(null);
+        if(lecture == null){
+            logger.warn("강의 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "강의 찾을 수 없음");
+        }
+        if (participantRepository.existsByLectureAndMember(lecture, member)){
+            logger.warn("이미 참가한 강의입니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 참가한 강의입니다.");
+        }
+        if (participantRepository.countByLecture(lecture) >= lecture.getMember_limit()) {
+            logger.warn("강의 정원이 가득 찼습니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "강의 정원이 가득 찼습니다.");
+        }
+
+        participantRepository.save(ParticipantConverter.joinParticipantConverter(member, lecture));
+        return LectureConverter.lectureDetailConverter(lecture);
     }
 }

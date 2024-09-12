@@ -3,6 +3,7 @@ package com.example.backend.lecture.converter;
 import com.example.backend.lecture.entity.Lecture;
 import com.example.backend.lecture.entity.dto.request.CreateLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
+import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
 
 public class LectureConverter {
 
@@ -28,6 +29,16 @@ public class LectureConverter {
         dto.setMember_limit(lecture.getMember_limit());
         dto.setDateTime(lecture.getDateTime());
         dto.setLocation(lecture.getLocation());
+        return dto;
+    }
+
+    public static LectureListResponseDTO lectureListConverter(Lecture lecture){
+        LectureListResponseDTO dto = new LectureListResponseDTO();
+        dto.setId(lecture.getId());
+        dto.setName(lecture.getName());
+        dto.setDateTime(lecture.getDateTime());
+        dto.setType(lecture.getType());
+        dto.setImageUrl(lecture.getLectureImages());
         return dto;
     }
 }
