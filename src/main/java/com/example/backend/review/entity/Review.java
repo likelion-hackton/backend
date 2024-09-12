@@ -37,10 +37,6 @@ public class Review {
     @NotNull
     private LocalDateTime created_at;
 
-    private Long likeCount;  // 기본값 0 설정
-
-    private Long dislikeCount;  // 기본값 0 설정
-
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "member_id")
