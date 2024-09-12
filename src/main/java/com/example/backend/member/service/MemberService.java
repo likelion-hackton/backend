@@ -49,6 +49,8 @@ public class MemberService {
     @Value("${spring.jwt.secretKey}") // 토큰용 비밀키
     private String secretKey;
 
+    public void verifyCode(String code) {}
+
     // 회원가입
     @Transactional
     public void signupMember(SignupRequestDTO req){
