@@ -1,9 +1,11 @@
 package com.example.backend.review.controller;
 
 
+import com.example.backend.review.entity.dto.request.ReviewIdRequestDTO;
 import com.example.backend.review.entity.dto.response.ReviewAllDTO;
 import com.example.backend.review.entity.dto.response.ReviewDetailsDTO;
 import com.example.backend.review.entity.dto.request.ReviewWriteRequestDTO;
+import com.example.backend.review.entity.dto.response.ReviewScoreResponseDTO;
 import com.example.backend.review.service.ReviewService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -43,11 +45,28 @@ public class ReviewController {
         return ResponseEntity.ok(reviewService.readReviewList(lectureId));
     }
 
-    // 좋아요
+    // 리뷰 평균 별점 조회
+    @GetMapping("/score/average")
+    public ResponseEntity<ReviewScoreResponseDTO> readReviewAverageScore(@RequestParam Long lectureId){
+        return ResponseEntity.ok(reviewService.getReviewAvgScore(lectureId));
+    }
 
+    // 리뷰 삭제
+    @DeleteMapping("/delete")
+    public ResponseEntity<String> deleteReview(@RequestBody ReviewIdRequestDTO request, Authentication auth){
+        reviewService.deleteReview(request, auth.getName());
+        return ResponseEntity.ok("리뷰 삭제 성공");
+    }
+
+    // 좋아요
+    @PostMapping("/like")
+    public ResponseEntity<Long> likeReview(@RequestParam Long lectureID, Authentication auth){
+        return ResponseEntity.ok(reviewService.likeReview(lectureID, auth.getName()));
+    }
 
     // 싫어요
-
-
-    // 클래스 평균 별점 조회
+    @PostMapping("/disLike")
+    public ResponseEntity<Long> disLikeReview(@RequestParam Long lectureID, Authentication auth){
+        return ResponseEntity.ok(reviewService.disLikeReview(lectureID, auth.getName()));
+    }
 }
