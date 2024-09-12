@@ -8,10 +8,7 @@ import com.example.backend.email.EmailSenderService;
 import com.example.backend.email.EmailVerifyService;
 import com.example.backend.member.entity.Member;
 import com.example.backend.member.converter.MemberConverter;
-import com.example.backend.member.entity.dto.request.EmailVerifyRequestDTO;
-import com.example.backend.member.entity.dto.request.LoginRequestDTO;
-import com.example.backend.member.entity.dto.request.RefreshRequestDTO;
-import com.example.backend.member.entity.dto.request.SignupRequestDTO;
+import com.example.backend.member.entity.dto.request.*;
 import com.example.backend.member.entity.dto.response.EmailVerifyResponseDTO;
 import com.example.backend.member.entity.dto.response.JwtTokenResponseDTO;
 import com.example.backend.member.repository.MemberRepository;
@@ -49,15 +46,16 @@ public class MemberService {
     @Value("${spring.jwt.secretKey}") // 토큰용 비밀키
     private String secretKey;
 
-    public void verifyCode(String code) {}
-
-    // 회원가입
-    @Transactional
-    public void signupMember(SignupRequestDTO req){
+    public void verifyCode(VerifyCodeRequestDTO req) {
         if(!emailVerifyService.verifyCode(req.getEmail(), req.getVerification())){
             logger.warn("유효하지 않은 인증코드");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "유효하지 않은 인증코드");
         }
+    }
+
+    // 회원가입
+    @Transactional
+    public void signupMember(SignupRequestDTO req){
         if (checkEmailDuplication(req.getEmail())){
             logger.warn("이메일 중복");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이메일 중복");
