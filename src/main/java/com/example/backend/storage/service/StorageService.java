@@ -10,10 +10,7 @@ import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
+import java.nio.file.*;
 
 @Service
 @Primary
@@ -44,7 +41,11 @@ public class StorageService {
                     .path(fileName)
                     .toUriString();
 
-        } catch (IOException e) {
+        } catch (DirectoryNotEmptyException e) {
+            // 아무일도 안일어남
+            return null;
+        }
+        catch (IOException e) {
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 저장 실패");
         }
     }
