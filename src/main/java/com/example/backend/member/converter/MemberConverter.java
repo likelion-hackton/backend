@@ -43,4 +43,15 @@ public class MemberConverter {
         dto.setRefresh_token_expires_in(refreshExpiresTime);
         return dto;
     }
+
+    // 비밀번호 변경
+    public static Member changePasswordConverter(Member member, String newPassword){
+        return Member.builder()
+                .id(member.getId())
+                .email(member.getEmail())
+                .password(newPassword)
+                .participants(member.getParticipants())
+                .memberInfo(member.getMemberInfo())
+                .build();
+    }
 }

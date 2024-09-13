@@ -28,7 +28,8 @@ public class MemberInfoConverter {
 
     public static MemberInfoDetailResponseDTO memberInfoDetailConverter(MemberInfo memberInfo){
         MemberInfoDetailResponseDTO dto = new MemberInfoDetailResponseDTO();
-        dto.setNickname(memberInfo.getNickname() + "#" + memberInfo.getTag());
+        dto.setNickname(memberInfo.getNickname());
+        dto.setTag("#" + memberInfo.getTag());
         dto.setIntroduction(memberInfo.getIntroduction() != null ? memberInfo.getIntroduction() : "");
         dto.setImageUrl(memberInfo.getMemberInfoImage() != null ? memberInfo.getMemberInfoImage().getImageUrl() : null);
         dto.setPermission(memberInfo.getPermission());

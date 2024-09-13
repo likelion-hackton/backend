@@ -167,6 +167,20 @@ public class MemberService {
         refreshTokenRepository.deleteByMember(member);
     }
 
+    @Transactional
+    public void changePassword(ChangePwRequestDTO req, String email){
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if(member == null){
+            logger.warn("사용자 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
+        }
+        if (!req.getNewPassword().equals(req.getCheckNewPassword())){
+            logger.warn("비밀번호 일치하지 않음");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호 일치하지 않음");
+        }
+        memberRepository.save(MemberConverter.changePasswordConverter(member, passwordEncoder.encode(req.getNewPassword())));
+    }
+
     // Id로 멤버 찾기
     public Member getMemberById(Long id){
         Optional<Member> findMember = memberRepository.findById(id);
