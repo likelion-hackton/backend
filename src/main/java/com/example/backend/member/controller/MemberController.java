@@ -66,4 +66,11 @@ public class MemberController {
         return ResponseEntity.ok(memberService.verifyRefreshToken(req));
     }
 
+    // 비밀번호 변경
+    @PatchMapping("/change-password")
+    public ResponseEntity<String> changePassword(@Valid @RequestBody ChangePwRequestDTO req, Authentication auth){
+        memberService.changePassword(req, auth.getName());
+        return ResponseEntity.ok("비밀번호 변경 성공");
+    }
+
 }
