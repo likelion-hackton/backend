@@ -100,14 +100,7 @@ public class ReviewService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다.");
         }
 
-        // memberInfoImageRepo 에서 이미지 없으면 null 있으면 url 가져오기
-        String imageUrl = null;
-        MemberInfoImage image = memberInfoImageRepository.findByMemberInfo(memberInfo);
-        if (image != null) {
-            imageUrl = image.getImageUrl();
-        }
-
-        return ReviewConverter.reviewDetailsConverter(review, memberInfo.getNickname(), imageUrl);
+        return ReviewConverter.reviewDetailsConverter(review, memberInfo);
     }
 
     // 리뷰 상세 조회
@@ -126,15 +119,8 @@ public class ReviewService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다.");
         }
 
-        // memberInfoImageRepo 에서 이미지 없으면 null 있으면 url 가져오기
-        MemberInfoImage image = memberInfoImageRepository.findByMemberInfo(memberInfo);
-        String imageUrl = null;
-        if (image != null) {
-            imageUrl = image.getImageUrl();
-        }
-
         // response DTO 생성
-        return ReviewConverter.reviewDetailsConverter(review, memberInfo.getNickname(), imageUrl);
+        return ReviewConverter.reviewDetailsConverter(review, memberInfo);
     }
 
     // 리뷰 전체 조회
@@ -253,6 +239,10 @@ public class ReviewService {
             logger.warn("리뷰 삭제 권한이 없습니다.");
             throw new ResponseStatusException(HttpStatus.FORBIDDEN, "리뷰 삭제 권한이 없습니다.");
         }
+
+        // like,dislike 삭제 -> 단방향 매핑이기 때문에
+        reviewLikeRepository.deleteByReview(review);
+        reviewDisLikeRepository.deleteByReview(review);
 
         // review 삭제
         reviewRepository.delete(review);

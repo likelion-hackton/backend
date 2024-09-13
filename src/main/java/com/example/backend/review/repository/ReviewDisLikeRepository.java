@@ -9,4 +9,6 @@ public interface ReviewDisLikeRepository extends JpaRepository<ReviewDisLike, Lo
     ReviewDisLike findByReviewAndMemberId(Review review, Long memberId);
 
     Long countByReview(Review review);
+
+    void deleteByReview(Review review);
 }

@@ -1,9 +1,12 @@
 package com.example.backend.review.entity.dto.response;
 
+import com.example.backend.review.entity.ReviewImage;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.List;
 
 @Getter
 @Setter
@@ -19,5 +22,5 @@ public class ReviewDetailsDTO{
     @NotBlank(message = "리뷰 내용이 비어있습니다.")
     private String reviewComment;
 
-    private Long reviewImageUrl;
+    private List<ReviewImage> reviewImageUrl;
 }
