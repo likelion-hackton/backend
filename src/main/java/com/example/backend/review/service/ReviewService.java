@@ -6,6 +6,8 @@ import com.example.backend.lecture.repository.LectureRepository;
 import com.example.backend.member.entity.Member;
 import com.example.backend.member.repository.MemberRepository;
 import com.example.backend.memberInfo.entity.MemberInfo;
+import com.example.backend.memberInfo.entity.MemberInfoImage;
+import com.example.backend.memberInfo.repository.MemberInfoImageRepository;
 import com.example.backend.memberInfo.repository.MemberInfoRepository;
 import com.example.backend.review.converter.ReviewConverter;
 import com.example.backend.review.entity.Review;
@@ -44,6 +46,7 @@ public class ReviewService {
     private final MemberRepository memberRepository;
     private final LectureRepository lectureRepository;
     private final MemberInfoRepository memberInfoRepository;
+    private final MemberInfoImageRepository memberInfoImageRepository;
     private final ReviewLikeRepository reviewLikeRepository;
     private final ReviewDisLikeRepository reviewDisLikeRepository;
 
@@ -97,7 +100,14 @@ public class ReviewService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다.");
         }
 
-        return ReviewConverter.reviewDetailsConverter(review, memberInfo.getNickname(), memberInfo.getMemberInfoImage().getImageUrl());
+        // memberInfoImageRepo 에서 이미지 없으면 null 있으면 url 가져오기
+        String imageUrl = null;
+        MemberInfoImage image = memberInfoImageRepository.findByMemberInfo(memberInfo);
+        if (image != null) {
+            imageUrl = image.getImageUrl();
+        }
+
+        return ReviewConverter.reviewDetailsConverter(review, memberInfo.getNickname(), imageUrl);
     }
 
     // 리뷰 상세 조회
@@ -116,8 +126,15 @@ public class ReviewService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다.");
         }
 
+        // memberInfoImageRepo 에서 이미지 없으면 null 있으면 url 가져오기
+        MemberInfoImage image = memberInfoImageRepository.findByMemberInfo(memberInfo);
+        String imageUrl = null;
+        if (image != null) {
+            imageUrl = image.getImageUrl();
+        }
+
         // response DTO 생성
-        return ReviewConverter.reviewDetailsConverter(review, memberInfo.getNickname(), memberInfo.getMemberInfoImage().getImageUrl());
+        return ReviewConverter.reviewDetailsConverter(review, memberInfo.getNickname(), imageUrl);
     }
 
     // 리뷰 전체 조회
@@ -133,18 +150,29 @@ public class ReviewService {
         List<Review> reviewList = reviewRepository.findAllByLecture(lecture);
 
         // MemberInfo 에서 필요한 정보 가져오기
-        List<MemberInfo> memberInfos = memberInfoRepository.findAllByMember((Member) reviewList.stream().map(Review::getMember));
+        List<Member> members = reviewList.stream()
+                .map(Review::getMember)
+                .collect(Collectors.toList());  // 스트림을 리스트로 변환
+
+        List<MemberInfo> memberInfos = memberInfoRepository.findAllByMemberIn(members);  // members 리스트를 사용
+
 
         // 각 리스트 에서 필요한 정보 가져와 ReviewAllDTO 로 변환
         List<ReviewAllDTO> reviewAllDTOs = new ArrayList<>();
         Map<Long, MemberInfo> memberInfoMap = memberInfos.stream()
                 .collect(Collectors.toMap(MemberInfo::getId, memberInfo -> memberInfo));
 
+        // image url 가져오기 in memberInfoImage
+        List<MemberInfoImage> memberInfoImages = memberInfoImageRepository.findAllByMemberInfoIn(memberInfos);
+        Map<Long, MemberInfoImage> memberInfoImageMap = memberInfoImages.stream()
+                .collect(Collectors.toMap(memberInfoImage -> memberInfoImage.getMemberInfo().getId(), memberInfoImage -> memberInfoImage));
+
         for (Review review : reviewList) {
             MemberInfo memberInfo = memberInfoMap.get(review.getMember().getId());
             ReviewAllDTO dto = new ReviewAllDTO();
+            dto.setReviewId(review.getId());
             dto.setMemberNickname(memberInfo.getNickname());
-            dto.setMemberImageUrl(memberInfo.getMemberInfoImage().getImageUrl());
+            dto.setMemberImageUrl(memberInfoImageMap.get(memberInfo.getId()) == null ? null : memberInfoImageMap.get(memberInfo.getId()).getImageUrl());
             dto.setReviewComment(review.getComment());
             dto.setScore(review.getScore());
             dto.setCreatedTime(review.getCreated_at());
