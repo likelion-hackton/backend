@@ -21,6 +21,10 @@ public class SwaggerConfig {
                 .url("http://localhost:8080")
                 .description("Local Server");
 
+        Server prodServer = new Server()
+                .url("http://sangsang2.kr:8080")
+                .description("Production Server");
+
         return new OpenAPI()
                 .info(new Info().title("멋사 교내해커톤 API").version("1.0").description("멋사 교내해커톤 API 명세서"))
                 .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
@@ -30,7 +34,7 @@ public class SwaggerConfig {
                                 .type(SecurityScheme.Type.HTTP)
                                 .scheme("bearer")
                                 .bearerFormat("JWT")))
-                .servers(Arrays.asList(localServer));
+                .servers(Arrays.asList(localServer,prodServer));
     }
 
     @Bean
