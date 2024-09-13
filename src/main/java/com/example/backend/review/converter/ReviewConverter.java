@@ -2,6 +2,7 @@ package com.example.backend.review.converter;
 
 import com.example.backend.lecture.entity.Lecture;
 import com.example.backend.member.entity.Member;
+import com.example.backend.memberInfo.entity.MemberInfo;
 import com.example.backend.review.entity.Review;
 import com.example.backend.review.entity.dto.request.ReviewWriteRequestDTO;
 import com.example.backend.review.entity.dto.response.ReviewDetailsDTO;
@@ -17,14 +18,17 @@ public class ReviewConverter {
                 .created_at(LocalDateTime.now())
                 .member(member)
                 .lecture(lecture)
+                .likeCount(0L)
+                .dislikeCount(0L)
                 .build();
     }
 
-    public static ReviewDetailsDTO reviewDetailsConverter(Review review, String memberNickname, String memberImageUrl){
+    public static ReviewDetailsDTO reviewDetailsConverter(Review review, MemberInfo memberInfo){
         ReviewDetailsDTO dto = new ReviewDetailsDTO();
         dto.setReviewComment(review.getComment());
-        dto.setMemberNickname(memberNickname);
-        dto.setMemberImageUrl(memberImageUrl);
+        dto.setReviewImageUrl(review.getReviewImages() != null ? review.getReviewImages()  : null);
+        dto.setMemberNickname(memberInfo.getNickname());
+        dto.setMemberImageUrl(memberInfo.getMemberInfoImage() != null ? memberInfo.getMemberInfoImage().getImageUrl() : null);
         return dto;
     }
 }

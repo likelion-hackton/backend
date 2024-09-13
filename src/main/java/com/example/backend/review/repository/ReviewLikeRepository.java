@@ -10,4 +10,6 @@ public interface ReviewLikeRepository extends JpaRepository<ReviewLike, Long> {
     ReviewLike findByReviewAndMemberId(Review review, Long memberId);
 
     Long countByReview(Review review);
+
+    void deleteByReview(Review review);
 }
