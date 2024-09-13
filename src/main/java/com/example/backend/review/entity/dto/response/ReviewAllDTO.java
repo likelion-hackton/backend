@@ -12,6 +12,9 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 public class ReviewAllDTO {
+    @NotNull
+    private Long reviewId;
+
     @NotBlank(message = "멤버 이름이 비어있습니다.")
     private String memberNickname;
 
