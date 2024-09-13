@@ -12,6 +12,9 @@ public class MemberInfoDetailResponseDTO {
     @NotBlank(message = "응답 이름이 비어있습니다.")
     private String nickname;
 
+    @NotBlank(message = "응답 태그가 비어있습니다.")
+    private String tag;
+
     private String introduction;
 
     private String imageUrl;
