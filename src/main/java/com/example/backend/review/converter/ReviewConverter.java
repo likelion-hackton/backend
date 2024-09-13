@@ -17,6 +17,8 @@ public class ReviewConverter {
                 .created_at(LocalDateTime.now())
                 .member(member)
                 .lecture(lecture)
+                .likeCount(0L)
+                .dislikeCount(0L)
                 .build();
     }
 
