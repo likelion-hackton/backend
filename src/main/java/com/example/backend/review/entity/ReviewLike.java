@@ -24,8 +24,8 @@ public class ReviewLike {
 
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "lecture_id")
-    private Lecture lecture;
+    @JoinColumn(name = "review_id")
+    private Review review;
 
     @NotNull
     private Long memberId;

@@ -42,6 +42,9 @@ public class Review {
     @JoinColumn(name = "member_id")
     private Member member;
 
+    private Long likeCount;
+    private Long dislikeCount;
+
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "lecture_id")
@@ -57,5 +60,13 @@ public class Review {
         }
         reviewImages.add(image);
         image.setReview(this);
+    }
+
+    public void setLikeCount(long l) {
+        this.likeCount = l;
+    }
+
+    public void setDislikeCount(long l) {
+        this.dislikeCount = l;
     }
 }

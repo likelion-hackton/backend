@@ -13,11 +13,11 @@ public class ReviewDetailsDTO{
     @NotBlank(message = "멤버 이름이 비어있습니다.")
     private String memberNickname;
 
-    private String memberImage;
+    private String memberImageUrl;
 
     //review
     @NotBlank(message = "리뷰 내용이 비어있습니다.")
     private String reviewComment;
 
-    //review image
+    private Long reviewImageUrl;
 }
