@@ -14,6 +14,7 @@ import java.util.List;
 @Entity
 @Table(name = "Lecture")
 @Builder(toBuilder = true)
+@DiscriminatorColumn(name = "lecture_type")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,14 +34,8 @@ public class Lecture {
     @NotNull
     private Long price;
 
-    @NotBlank
-    private String type;
-
     @NotNull
     private int member_limit;
-
-    @NotNull
-    private Instant dateTime;
 
     @NotBlank
     private String location;
