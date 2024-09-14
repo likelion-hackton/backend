@@ -51,15 +51,19 @@ public class MemberService {
             logger.warn("유효하지 않은 인증코드");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "유효하지 않은 인증코드");
         }
-        if (checkEmailDuplication(req.getEmail())){
-            logger.warn("이메일 중복");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이메일 중복");
-        }
     }
 
     // 회원가입
     @Transactional
     public void signupMember(SignupRequestDTO req){
+        if (checkEmailDuplication(req.getEmail())){
+            logger.warn("이메일 중복");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이메일 중복");
+        }
+        if(!emailVerifyService.verifyCode(req.getEmail(), req.getVerification())){
+            logger.warn("유효하지 않은 인증코드");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "유효하지 않은 인증코드");
+        }
         if (!req.getPassword().equals(req.getCheckPassword())){
             logger.warn("비밀번호 일치하지 않음");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "비밀번호 일치하지 않음");
