@@ -4,6 +4,7 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 
 import java.time.Instant;
+import java.time.LocalTime;
 
 @Getter
 @Setter
@@ -22,4 +23,10 @@ public class CreateLectureRequestDTO {
 
     @NotBlank(message = "강의 위치가 비어있습니다.")
     private String location;
+
+    @NotNull(message = "시작 시간이 비어있습니다.")
+    private LocalTime startTime;
+
+    @NotNull(message = "종료 시간이 비어있습니다.")
+    private LocalTime endTime;
 }

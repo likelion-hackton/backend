@@ -17,7 +17,9 @@ public class LectureConverter {
                 .price(req.getPrice())
                 .member_limit(req.getMember_limit())
                 .location(req.getLocation())
-                .dateTime(req.getDateTime())
+                .startTime()
+                .endTime()
+                .date()
                 .build();
     }
 
