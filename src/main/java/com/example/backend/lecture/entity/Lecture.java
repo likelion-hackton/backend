@@ -6,6 +6,7 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 import java.util.ArrayList;
@@ -13,7 +14,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "Lecture")
-@Builder(toBuilder = true)
+@SuperBuilder(toBuilder = true)
 @DiscriminatorColumn(name = "lecture_type")
 @Getter
 @NoArgsConstructor

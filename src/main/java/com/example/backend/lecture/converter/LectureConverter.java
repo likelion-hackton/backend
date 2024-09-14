@@ -1,22 +1,28 @@
 package com.example.backend.lecture.converter;
 
 import com.example.backend.lecture.entity.Lecture;
+import com.example.backend.lecture.entity.OneDayLecture;
+import com.example.backend.lecture.entity.RegularLecture;
 import com.example.backend.lecture.entity.dto.request.CreateLectureRequestDTO;
+import com.example.backend.lecture.entity.dto.request.CreateOneDayLectureRequestDTO;
+import com.example.backend.lecture.entity.dto.request.CreateRegularLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
 
 public class LectureConverter {
 
-    public static Lecture createLectureConverter(CreateLectureRequestDTO req){
-        return Lecture.builder()
+    public static OneDayLecture createOneDayLectureConverter(CreateOneDayLectureRequestDTO req){
+        return OneDayLecture.builder()
                 .name(req.getName())
-                .description(req.getDescription() != null ? req.getDescription() : "") // 설명이 없다면 비어있도록
+                .description(req.getDescription() != null ? req.getDescription() : "")
                 .price(req.getPrice())
-                .type(req.getType())
                 .member_limit(req.getMember_limit())
-                .dateTime(req.getDateTime())
                 .location(req.getLocation())
-                .build();
+                .
+    }
+
+    public static RegularLecture createRegularLectureConverter(CreateRegularLectureRequestDTO req){
+        return RegularLecture.builder().
     }
 
     public static LectureDetailResponseDTO lectureDetailConverter(Lecture lecture){

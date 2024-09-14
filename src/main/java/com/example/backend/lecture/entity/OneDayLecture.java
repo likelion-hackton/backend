@@ -6,16 +6,18 @@ import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
 
 @Entity
 @DiscriminatorValue("OneDay")
+@SuperBuilder(toBuilder = true)
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 public class OneDayLecture extends Lecture{
 
     @NotNull(message = "날짜가 비어있습니다.")
-    private Instant dataTime;
+    private Instant lectureDateTime;
 }
