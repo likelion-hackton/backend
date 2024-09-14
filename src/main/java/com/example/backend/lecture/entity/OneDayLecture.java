@@ -19,5 +19,5 @@ import java.time.Instant;
 public class OneDayLecture extends Lecture{
 
     @NotNull(message = "날짜가 비어있습니다.")
-    private Instant lectureDateTime;
+    private Instant dateTime;
 }
