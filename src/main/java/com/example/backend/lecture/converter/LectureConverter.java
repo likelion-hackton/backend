@@ -17,9 +17,9 @@ public class LectureConverter {
                 .price(req.getPrice())
                 .member_limit(req.getMember_limit())
                 .location(req.getLocation())
-                .startTime()
-                .endTime()
-                .date()
+                .startTime(req.getStartTime())
+                .endTime(req.getEndTime())
+                .date(req.getDate())
                 .build();
     }
 
@@ -30,9 +30,10 @@ public class LectureConverter {
                 .price(req.getPrice())
                 .member_limit(req.getMember_limit())
                 .location(req.getLocation())
+                .startTime(req.getStartTime())
+                .endTime(req.getEndTime())
                 .startDate(req.getStartDate())
                 .endDate(req.getEndDate())
-                .time(req.getTime())
                 .daysOfWeek(req.getDaysOfWeek())
                 .build();
     }
@@ -45,16 +46,17 @@ public class LectureConverter {
         dto.setPrice(lecture.getPrice());
         dto.setLocation(lecture.getLocation());
         dto.setMember_limit(lecture.getMember_limit());
+        dto.setStartTime(lecture.getStartTime());
+        dto.setEndTime(lecture.getEndTime());
         if (lecture instanceof OneDayLecture){
             OneDayLecture oneDayLecture = (OneDayLecture) lecture;
             dto.setType("OneDay");
-            dto.setDateTime(oneDayLecture.getDateTime());
+            dto.setDate(oneDayLecture.getDate());
         } else if (lecture instanceof RegularLecture){
             RegularLecture regularLecture = (RegularLecture) lecture;
             dto.setType("Regular");
             dto.setStartDate(regularLecture.getStartDate());
             dto.setEndDate(regularLecture.getEndDate());
-            dto.setTime(regularLecture.getTime());
             dto.setDaysOfWeek(regularLecture.getDaysOfWeek());
         }
 
@@ -66,13 +68,7 @@ public class LectureConverter {
         dto.setId(lecture.getId());
         dto.setName(lecture.getName());
         dto.setType(lecture instanceof OneDayLecture ? "OneDay" : "Regular");
-
-        if (lecture instanceof OneDayLecture){
-            dto.setDateTime(((OneDayLecture) lecture).getDateTime());
-        } else if (lecture instanceof RegularLecture){
-            dto.
-        }
-
+        dto.setPrice(lecture.getPrice());
         dto.setImageUrl(lecture.getLectureImages());
         return dto;
     }

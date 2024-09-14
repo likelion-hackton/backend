@@ -5,6 +5,7 @@ import lombok.*;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
 
@@ -30,13 +31,17 @@ public class LectureDetailResponseDTO {
     @NotNull(message = "최대인원이 비어있습니다.")
     private int member_limit;
 
-    private Instant dateTime;
+    @NotNull(message = "시작 시간이 비어있습니다.")
+    private LocalTime startTime;
 
-    private Instant startDate;
+    @NotNull(message = "종료 시간이 비어있습니다.")
+    private LocalTime endTime;
 
-    private Instant endDate;
+    private LocalDate date;
 
-    private LocalTime time;
+    private LocalDate startDate;
+
+    private LocalDate endDate;
 
     private Set<DayOfWeek> daysOfWeek;
 
