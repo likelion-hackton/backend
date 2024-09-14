@@ -9,6 +9,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.DayOfWeek;
 import java.time.Instant;
+import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Set;
 
@@ -20,14 +21,11 @@ import java.util.Set;
 @AllArgsConstructor
 public class RegularLecture extends Lecture{
 
-    @NotNull(message = "시작 날짜가 비어있습니다.")
-    private Instant startDate;
+    @NotNull
+    private LocalDate startDate;
 
-    @NotNull(message = "종료 날짜가 비어있습니다.")
-    private Instant endDate;
-
-    @NotNull(message = "강의 시간이 비어있습니다.")
-    private LocalTime time;
+    @NotNull
+    private LocalDate endDate;
 
     @ElementCollection
     @Enumerated(EnumType.STRING)

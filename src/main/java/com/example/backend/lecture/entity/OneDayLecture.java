@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
+import java.time.LocalDate;
 
 @Entity
 @DiscriminatorValue("OneDay")
@@ -18,6 +19,6 @@ import java.time.Instant;
 @AllArgsConstructor
 public class OneDayLecture extends Lecture{
 
-    @NotNull(message = "날짜가 비어있습니다.")
-    private Instant dateTime;
+    @NotNull
+    private LocalDate date;
 }

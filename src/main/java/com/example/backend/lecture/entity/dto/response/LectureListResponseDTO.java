@@ -21,11 +21,11 @@ public class LectureListResponseDTO {
     @NotBlank(message = "강의명이 비어있습니다.")
     private String name;
 
-    @NotNull(message = "강의 날짜가 비어있습니다.")
-    private Instant dateTime;
-
     @NotBlank(message = "강의유형이 비어있습니다.")
     private String type;
+
+    @NotNull(message = "강의 가격이 비어있습니다.")
+    private Long price;
 
     @NotBlank(message = "이미지 주소가 비어있습니다.")
     private List<LectureImage> imageUrl;
