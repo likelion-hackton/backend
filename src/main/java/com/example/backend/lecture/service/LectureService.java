@@ -19,11 +19,13 @@ import com.example.backend.participant.repository.ParticipantRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
@@ -36,8 +38,11 @@ public class LectureService {
     private final LectureRepository lectureRepository;
     private final MemberRepository memberRepository;
     private final ParticipantRepository participantRepository;
-
     private final ImageService imageService;
+    private final WebClient webClient;
+
+    @Value("${spring.kakao.api.key}")
+    private String kakaoApiKey;
 
     private static final Logger logger = LoggerFactory.getLogger(LectureService.class);
 
@@ -133,4 +138,22 @@ public class LectureService {
         participantRepository.save(ParticipantConverter.joinParticipantConverter(member, lecture));
         return LectureConverter.lectureDetailConverter(lecture);
     }
+
+    private void setCoordinates(Lecture lecture, String address){
+        webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/v2/local/search/address.json")
+                        .queryParam("query", address)
+                        .build())
+                .header("Authorization", "KakapAK " + kakaoApiKey)
+                .retrieve()
+                .bodyToMono(String.class)
+                .map(response -> {
+                    lecture.setLatitude();
+                    lecture.setLongitude();
+                    return lecture
+                })
+                .block();
+    }
+
 }

@@ -18,6 +18,7 @@ import java.util.List;
 @SuperBuilder(toBuilder = true)
 @DiscriminatorColumn(name = "lecture_type")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
