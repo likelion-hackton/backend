@@ -45,6 +45,14 @@ public class LectureDetailResponseDTO {
 
     private Set<DayOfWeek> daysOfWeek;
 
-    @NotBlank(message = "강의 위치가 비어있습니다.")
-    private String location;
+    @NotNull(message = "위도가 비어있습니다.")
+    private double latitude;
+
+    @NotNull(message = "경도가 비어있습니다.")
+    private double longitude;
+
+    @NotBlank(message = "주소가 비어있습니다.")
+    private String address;
+
+    private String detailAddress;
 }

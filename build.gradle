@@ -32,7 +32,10 @@ dependencies {
 	annotationProcessor 'org.springframework.boot:spring-boot-configuration-processor'
 	implementation 'org.springframework.boot:spring-boot-starter-test'
 
-	//이메일 전송
+	// 카카오 api 사용을 위한 WebClient
+	implementation 'org.springframework.boot:spring-boot-starter-webflux'
+
+	// 이메일 전송
 	implementation 'org.springframework.boot:spring-boot-starter-mail'
 
 	//spring-doc-swagger

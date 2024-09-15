@@ -16,10 +16,11 @@ public class LectureConverter {
                 .description(req.getDescription() != null ? req.getDescription() : "")
                 .price(req.getPrice())
                 .member_limit(req.getMember_limit())
-                .location(req.getLocation())
                 .startTime(req.getStartTime())
                 .endTime(req.getEndTime())
                 .date(req.getDate())
+                .address(req.getAddress())
+                .detailAddress(req.getDetailAddress())
                 .build();
     }
 
@@ -29,12 +30,13 @@ public class LectureConverter {
                 .description(req.getDescription())
                 .price(req.getPrice())
                 .member_limit(req.getMember_limit())
-                .location(req.getLocation())
                 .startTime(req.getStartTime())
                 .endTime(req.getEndTime())
                 .startDate(req.getStartDate())
                 .endDate(req.getEndDate())
                 .daysOfWeek(req.getDaysOfWeek())
+                .address(req.getAddress())
+                .detailAddress(req.getDetailAddress())
                 .build();
     }
 
@@ -44,7 +46,10 @@ public class LectureConverter {
         dto.setName(lecture.getName());
         dto.setDescription(lecture.getDescription());
         dto.setPrice(lecture.getPrice());
-        dto.setLocation(lecture.getLocation());
+        dto.setLatitude(lecture.getLatitude());
+        dto.setLongitude(lecture.getLongitude());
+        dto.setAddress(lecture.getAddress());
+        dto.setDetailAddress(lecture.getDetailAddress() != null ? lecture.getDetailAddress() : "");
         dto.setMember_limit(lecture.getMember_limit());
         dto.setStartTime(lecture.getStartTime());
         dto.setEndTime(lecture.getEndTime());

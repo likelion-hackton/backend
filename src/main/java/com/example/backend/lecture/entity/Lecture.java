@@ -18,6 +18,7 @@ import java.util.List;
 @SuperBuilder(toBuilder = true)
 @DiscriminatorColumn(name = "lecture_type")
 @Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
@@ -45,8 +46,18 @@ public class Lecture {
     @NotNull
     private LocalTime endTime;
 
+    // 위도
+    @NotNull
+    private Double latitude;
+
+    // 경도
+    @NotNull
+    private Double longitude;
+
     @NotBlank
-    private String location;
+    private String address;
+
+    private String detailAddress;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)

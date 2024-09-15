@@ -22,7 +22,9 @@ public class CreateLectureRequestDTO {
     private int member_limit;
 
     @NotBlank(message = "강의 위치가 비어있습니다.")
-    private String location;
+    private String address;
+
+    private String detailAddress;
 
     @NotNull(message = "시작 시간이 비어있습니다.")
     private LocalTime startTime;

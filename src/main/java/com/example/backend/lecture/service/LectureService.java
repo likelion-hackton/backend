@@ -16,16 +16,21 @@ import com.example.backend.member.entity.Member;
 import com.example.backend.member.repository.MemberRepository;
 import com.example.backend.participant.converter.ParticipantConverter;
 import com.example.backend.participant.repository.ParticipantRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -36,9 +41,14 @@ public class LectureService {
     private final LectureRepository lectureRepository;
     private final MemberRepository memberRepository;
     private final ParticipantRepository participantRepository;
-
     private final ImageService imageService;
+    private final WebClient webClient;
 
+    @Value("${spring.kakao.api.key}")
+    private String kakaoApiKey;
+
+    // Json 처리용
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger logger = LoggerFactory.getLogger(LectureService.class);
 
     // 원데이 강의 생성
@@ -51,6 +61,7 @@ public class LectureService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
         }
         OneDayLecture oneDayLecture = LectureConverter.createOneDayLectureConverter(req);
+        setCoordinates(oneDayLecture, req.getAddress());
         return createLectureCommon(oneDayLecture, member, images);
     }
 
@@ -64,6 +75,7 @@ public class LectureService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
         }
         RegularLecture regularLecture = LectureConverter.createRegularLectureConverter(req);
+        setCoordinates(regularLecture, req.getAddress());
         return createLectureCommon(regularLecture, member, images);
     }
 
@@ -83,7 +95,6 @@ public class LectureService {
                     image.setImageUrl(url);
                     return image;
                 }, Lecture::addImage);
-
         Lecture saveLecture = lectureRepository.save(lecture);
         participantRepository.save(ParticipantConverter.createParticipantConverter(member, saveLecture));
         return LectureConverter.lectureDetailConverter(saveLecture);
@@ -133,4 +144,56 @@ public class LectureService {
         participantRepository.save(ParticipantConverter.joinParticipantConverter(member, lecture));
         return LectureConverter.lectureDetailConverter(lecture);
     }
+
+    private void setCoordinates(Lecture lecture, String address){
+        webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/v2/local/search/address.json")
+                        .queryParam("query", address)
+                        .build())
+                .header("Authorization", "KakaoAK " + kakaoApiKey)
+                .retrieve()
+                .bodyToMono(String.class)
+                .map(response -> {
+                    double latitude = extractLatitude(response);
+                    double longitude = extractLongitude(response);
+                    lecture.setLatitude(latitude);
+                    lecture.setLongitude(longitude);
+                    return lecture;
+                })
+                .block();
+    }
+
+    private double extractLatitude(String response){
+        try {
+            JsonNode root = objectMapper.readTree(response);
+            JsonNode documents = root.path("documents");
+            if (documents.isArray() && !documents.isEmpty()){
+                JsonNode firstResult = documents.get(0);
+                return firstResult.path("y").asDouble();
+            }
+            logger.warn("위도 정보 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "위도 정보 찾을 수 없음");
+        } catch (IOException e){
+            logger.warn("JSON 파싱 중 오류 발생");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "JSON 파싱 중 오류 발생");
+        }
+    }
+
+    private double extractLongitude(String response){
+        try {
+            JsonNode root = objectMapper.readTree(response);
+            JsonNode documents = root.path("documents");
+            if (documents.isArray() && !documents.isEmpty()){
+                JsonNode firstResult = documents.get(0);
+                return firstResult.path("x").asDouble();
+            }
+            logger.warn("경도 정보 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "경도 정보 찾을 수 없음");
+        } catch (IOException e){
+            logger.warn("JSON 파싱 중 오류 발생");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "JSON 파싱 중 오류 발생");
+        }
+    }
+
 }
