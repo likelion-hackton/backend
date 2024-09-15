@@ -151,7 +151,7 @@ public class LectureService {
                         .path("/v2/local/search/address.json")
                         .queryParam("query", address)
                         .build())
-                .header("Authorization", "KakapAK " + kakaoApiKey)
+                .header("Authorization", "KakaoAK " + kakaoApiKey)
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(response -> {
@@ -167,7 +167,7 @@ public class LectureService {
     private double extractLatitude(String response){
         try {
             JsonNode root = objectMapper.readTree(response);
-            JsonNode documents = root.path("document");
+            JsonNode documents = root.path("documents");
             if (documents.isArray() && !documents.isEmpty()){
                 JsonNode firstResult = documents.get(0);
                 return firstResult.path("y").asDouble();
@@ -183,7 +183,7 @@ public class LectureService {
     private double extractLongitude(String response){
         try {
             JsonNode root = objectMapper.readTree(response);
-            JsonNode documents = root.path("document");
+            JsonNode documents = root.path("documents");
             if (documents.isArray() && !documents.isEmpty()){
                 JsonNode firstResult = documents.get(0);
                 return firstResult.path("x").asDouble();
