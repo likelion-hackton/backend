@@ -42,7 +42,8 @@ public class LectureConverter {
         dto.setName(lecture.getName());
         dto.setDescription(lecture.getDescription());
         dto.setPrice(lecture.getPrice());
-        dto.setLocation(lecture.getLocation());
+        dto.setLatitude(lecture.getLatitude());
+        dto.setLongitude(lecture.getLongitude());
         dto.setMember_limit(lecture.getMember_limit());
         dto.setStartTime(lecture.getStartTime());
         dto.setEndTime(lecture.getEndTime());
