@@ -54,6 +54,7 @@ public class Lecture {
     @NotNull
     private Double longitude;
 
+    @NotBlank
     private String address;
 
     private String detailAddress;
