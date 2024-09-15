@@ -54,6 +54,10 @@ public class Lecture {
     @NotNull
     private Double longitude;
 
+    private String address;
+
+    private String detailAddress;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Participant> participants;

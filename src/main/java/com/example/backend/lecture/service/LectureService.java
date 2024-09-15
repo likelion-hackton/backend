@@ -61,7 +61,7 @@ public class LectureService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
         }
         OneDayLecture oneDayLecture = LectureConverter.createOneDayLectureConverter(req);
-        setCoordinates(oneDayLecture, req.getLocation());
+        setCoordinates(oneDayLecture, req.getAddress());
         return createLectureCommon(oneDayLecture, member, images);
     }
 
@@ -75,7 +75,7 @@ public class LectureService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
         }
         RegularLecture regularLecture = LectureConverter.createRegularLectureConverter(req);
-        setCoordinates(regularLecture, req.getLocation());
+        setCoordinates(regularLecture, req.getAddress());
         return createLectureCommon(regularLecture, member, images);
     }
 

@@ -19,6 +19,8 @@ public class LectureConverter {
                 .startTime(req.getStartTime())
                 .endTime(req.getEndTime())
                 .date(req.getDate())
+                .address(req.getAddress())
+                .detailAddress(req.getDetailAddress())
                 .build();
     }
 
@@ -33,6 +35,8 @@ public class LectureConverter {
                 .startDate(req.getStartDate())
                 .endDate(req.getEndDate())
                 .daysOfWeek(req.getDaysOfWeek())
+                .address(req.getAddress())
+                .detailAddress(req.getDetailAddress())
                 .build();
     }
 
@@ -44,6 +48,8 @@ public class LectureConverter {
         dto.setPrice(lecture.getPrice());
         dto.setLatitude(lecture.getLatitude());
         dto.setLongitude(lecture.getLongitude());
+        dto.setAddress(lecture.getAddress());
+        dto.setDetailAddress(lecture.getDetailAddress() != null ? lecture.getDetailAddress() : "");
         dto.setMember_limit(lecture.getMember_limit());
         dto.setStartTime(lecture.getStartTime());
         dto.setEndTime(lecture.getEndTime());

@@ -50,4 +50,9 @@ public class LectureDetailResponseDTO {
 
     @NotNull(message = "경도가 비어있습니다.")
     private double longitude;
+
+    @NotBlank(message = "주소가 비어있습니다.")
+    private String address;
+
+    private String detailAddress;
 }
