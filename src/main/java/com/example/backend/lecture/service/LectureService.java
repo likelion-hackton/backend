@@ -16,6 +16,8 @@ import com.example.backend.member.entity.Member;
 import com.example.backend.member.repository.MemberRepository;
 import com.example.backend.participant.converter.ParticipantConverter;
 import com.example.backend.participant.repository.ParticipantRepository;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +30,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.reactive.function.client.WebClient;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -44,6 +47,8 @@ public class LectureService {
     @Value("${spring.kakao.api.key}")
     private String kakaoApiKey;
 
+    // Json 처리용
+    private final ObjectMapper objectMapper = new ObjectMapper();
     private static final Logger logger = LoggerFactory.getLogger(LectureService.class);
 
     // 원데이 강의 생성
@@ -149,11 +154,28 @@ public class LectureService {
                 .retrieve()
                 .bodyToMono(String.class)
                 .map(response -> {
-                    lecture.setLatitude();
+                    double latitude = extractLatitude(response);
+                    lecture.setLatitude(latitude);
                     lecture.setLongitude();
                     return lecture
                 })
                 .block();
+    }
+
+    private double extractLatitude(String response){
+        try {
+            JsonNode root = objectMapper.readTree(response);
+            JsonNode documents = root.path("document");
+            if (documents.isArray() && !documents.isEmpty()){
+                JsonNode firstResult = documents.get(0);
+                return firstResult.path("y").asDouble();
+            }
+            logger.warn("위도 정보 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "위도 정보 찾을 수 없음");
+        } catch (IOException e){
+            logger.warn("JSON 파싱 중 오류 발생");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "JSON 파싱 중 오류 발생");
+        }
     }
 
 }
