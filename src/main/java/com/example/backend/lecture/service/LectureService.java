@@ -155,9 +155,10 @@ public class LectureService {
                 .bodyToMono(String.class)
                 .map(response -> {
                     double latitude = extractLatitude(response);
+                    double longitude = extractLongitude(response);
                     lecture.setLatitude(latitude);
-                    lecture.setLongitude();
-                    return lecture
+                    lecture.setLongitude(longitude);
+                    return lecture;
                 })
                 .block();
     }
@@ -172,6 +173,22 @@ public class LectureService {
             }
             logger.warn("위도 정보 찾을 수 없음");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "위도 정보 찾을 수 없음");
+        } catch (IOException e){
+            logger.warn("JSON 파싱 중 오류 발생");
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "JSON 파싱 중 오류 발생");
+        }
+    }
+
+    private double extractLongitude(String response){
+        try {
+            JsonNode root = objectMapper.readTree(response);
+            JsonNode documents = root.path("document");
+            if (documents.isArray() && !documents.isEmpty()){
+                JsonNode firstResult = documents.get(0);
+                return firstResult.path("x").asDouble();
+            }
+            logger.warn("경도 정보 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "경도 정보 찾을 수 없음");
         } catch (IOException e){
             logger.warn("JSON 파싱 중 오류 발생");
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "JSON 파싱 중 오류 발생");
