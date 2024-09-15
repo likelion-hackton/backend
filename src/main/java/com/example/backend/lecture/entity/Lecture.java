@@ -6,14 +6,17 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.*;
 import lombok.*;
+import lombok.experimental.SuperBuilder;
 
 import java.time.Instant;
+import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
 @Table(name = "Lecture")
-@Builder(toBuilder = true)
+@SuperBuilder(toBuilder = true)
+@DiscriminatorColumn(name = "lecture_type")
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
@@ -33,14 +36,14 @@ public class Lecture {
     @NotNull
     private Long price;
 
-    @NotBlank
-    private String type;
-
     @NotNull
     private int member_limit;
 
     @NotNull
-    private Instant dateTime;
+    private LocalTime startTime;
+
+    @NotNull
+    private LocalTime endTime;
 
     @NotBlank
     private String location;

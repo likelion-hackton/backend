@@ -1,6 +1,8 @@
 package com.example.backend.lecture.controller;
 
 import com.example.backend.lecture.entity.dto.request.CreateLectureRequestDTO;
+import com.example.backend.lecture.entity.dto.request.CreateOneDayLectureRequestDTO;
+import com.example.backend.lecture.entity.dto.request.CreateRegularLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
 import com.example.backend.lecture.service.LectureService;
@@ -20,12 +22,20 @@ import java.util.List;
 public class LectureController {
     private final LectureService lectureService;
 
-    @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<LectureDetailResponseDTO> createLecture(@RequestPart("lecture") @Valid CreateLectureRequestDTO req,
+    @PostMapping(value = "/create/oneday", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<LectureDetailResponseDTO> createOneDayLecture(@RequestPart("lecture") @Valid CreateOneDayLectureRequestDTO req,
                                                                   @RequestPart("images") List<MultipartFile> images,
                                                                   Authentication auth){
         String email = auth.getName();
-        return ResponseEntity.ok(lectureService.createLecture(req, email, images));
+        return ResponseEntity.ok(lectureService.createOneDayLecture(req, email, images));
+    }
+
+    @PostMapping(value = "/create/regular", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<LectureDetailResponseDTO> createRegularLecture(@RequestPart("lecture") @Valid CreateRegularLectureRequestDTO req,
+                                                                  @RequestPart("images") List<MultipartFile> images,
+                                                                  Authentication auth){
+        String email = auth.getName();
+        return ResponseEntity.ok(lectureService.createRegularLecture(req, email, images));
     }
 
     @GetMapping("/own")
