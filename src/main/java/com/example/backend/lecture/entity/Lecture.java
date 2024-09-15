@@ -45,8 +45,13 @@ public class Lecture {
     @NotNull
     private LocalTime endTime;
 
-    @NotBlank
-    private String location;
+    // 위도
+    @NotNull
+    private Double latitude;
+
+    // 경도
+    @NotNull
+    private Double longitude;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
