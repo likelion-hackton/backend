@@ -4,6 +4,7 @@ import com.example.backend.category.Category;
 import com.example.backend.lecture.entity.dto.request.CreateLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.request.CreateOneDayLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.request.CreateRegularLectureRequestDTO;
+import com.example.backend.lecture.entity.dto.response.LectureBannerResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
 import com.example.backend.lecture.service.LectureService;
@@ -62,5 +63,10 @@ public class LectureController {
     @GetMapping("/{lecture}")
     public ResponseEntity<LectureDetailResponseDTO> lectureDetail(@PathVariable("lecture") Long lecture_id){
         return ResponseEntity.ok(lectureService.lectureDetail(lecture_id));
+    }
+
+    @GetMapping("/banner")
+    private ResponseEntity<List<LectureBannerResponseDTO>> lectureBanner(){
+        return ResponseEntity.ok(lectureService.lectureBanner());
     }
 }
