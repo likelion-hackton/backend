@@ -2,6 +2,7 @@ package com.example.backend.lecture.repository;
 
 import com.example.backend.category.Category;
 import com.example.backend.lecture.entity.Lecture;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -20,4 +21,8 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
     @Modifying(clearAutomatically = true)
     @Query("UPDATE LectureCount lc SET lc.viewCount = lc.viewCount + 1 WHERE lc.lecture.id = :lectureId")
     void incrementViewCount(@Param("lectureId") Long lectureId);
+
+    // 범위만큼 검색이 가장 많이 된 강의 조회
+    @Query("SELECT l FROM Lecture l JOIN l.lectureCount lc ORDER BY lc.viewCount DESC")
+    List<Lecture> findTop5ByOrderByViewCountDesc(Pageable pageable);
 }
