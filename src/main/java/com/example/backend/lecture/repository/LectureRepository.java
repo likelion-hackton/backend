@@ -24,5 +24,5 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
 
     // 범위만큼 검색이 가장 많이 된 강의 조회
     @Query("SELECT l FROM Lecture l JOIN l.lectureCount lc ORDER BY lc.viewCount DESC")
-    List<Lecture> findTop5ByOrderByViewCountDesc(Pageable pageable);
+    List<Lecture> findTop3ByOrderByViewCountDesc(Pageable pageable);
 }
