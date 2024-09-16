@@ -55,7 +55,12 @@ public class LectureController {
     }
 
     @GetMapping("/search")
-    public ResponseEntity<List<LectureListResponseDTO>> searchLectureByKeyword(@RequestParam(value = "keyword") String keyword){
+    public ResponseEntity<List<LectureListResponseDTO>> searchLectureByKeyword(@RequestParam("keyword") String keyword){
         return ResponseEntity.ok(lectureService.searchLectureByKeyword(keyword));
+    }
+
+    @GetMapping("/{lecture}")
+    public ResponseEntity<LectureDetailResponseDTO> lectureDetail(@PathVariable("lecture") Long lecture_id){
+        return ResponseEntity.ok(lectureService.lectureDetail(lecture_id));
     }
 }

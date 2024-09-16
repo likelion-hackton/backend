@@ -100,6 +100,16 @@ public class LectureService {
         return LectureConverter.lectureDetailConverter(saveLecture);
     }
 
+    // 강의 상세 조회
+    public LectureDetailResponseDTO lectureDetail(Long lecture_id){
+        Lecture lecture = lectureRepository.findById(lecture_id).orElse(null);
+        if(lecture == null){
+            logger.warn("강의 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "강의 찾을 수 없음");
+        }
+        return LectureConverter.lectureDetailConverter(lecture);
+    }
+
     // 카테고리로 강의 조회
     public List<LectureListResponseDTO> getLectureByCategory(String categoryName){
         Category category;
