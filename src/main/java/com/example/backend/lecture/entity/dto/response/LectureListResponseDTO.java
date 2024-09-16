@@ -29,5 +29,7 @@ public class LectureListResponseDTO {
 
     private Long searchCount;
 
+    private double averageScore;
+
     private List<LectureImage> imageUrl;
 }

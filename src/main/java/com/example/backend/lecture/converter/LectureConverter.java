@@ -7,6 +7,7 @@ import com.example.backend.lecture.entity.dto.request.CreateOneDayLectureRequest
 import com.example.backend.lecture.entity.dto.request.CreateRegularLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
+import com.example.backend.review.entity.Review;
 
 public class LectureConverter {
 
@@ -80,7 +81,14 @@ public class LectureConverter {
         dto.setPrice(lecture.getPrice());
         dto.setSearchCount(lecture.getLectureCount() != null ? lecture.getLectureCount().getViewCount() : 0);
         dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages() : null);
-        if (lecture)
+        if (lecture.getReviews() != null && lecture.getReviews().size() >= 5) {
+            dto.setAverageScore(lecture.getReviews().stream()
+                    .mapToLong(Review::getScore)
+                    .average()
+                    .orElse(0));
+        }else {
+            dto.setAverageScore(0);
+        }
         return dto;
     }
 }
