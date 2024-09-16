@@ -7,6 +7,7 @@ import com.example.backend.lecture.converter.LectureConverter;
 import com.example.backend.lecture.entity.dto.request.CreateLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.request.CreateOneDayLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.request.CreateRegularLectureRequestDTO;
+import com.example.backend.lecture.entity.dto.response.LectureBannerResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
 import com.example.backend.lecture.repository.LectureRepository;
@@ -21,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -108,6 +110,15 @@ public class LectureService {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "강의 찾을 수 없음");
         }
         return LectureConverter.lectureDetailConverter(lecture);
+    }
+
+    // 배너 강의 조회
+    public List<LectureBannerResponseDTO> lectureBanner(){
+        PageRequest topThree = PageRequest.of(0, 3);
+        List<Lecture> lectures = lectureRepository.findTop3ByOrderByViewCountDesc(topThree);
+        return lectures.stream()
+                .map(LectureConverter::lectureBannerConverter)
+                .collect(Collectors.toList());
     }
 
     // 카테고리로 강의 조회
