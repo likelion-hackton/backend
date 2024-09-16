@@ -64,6 +64,7 @@ public class LectureConverter {
             dto.setEndDate(regularLecture.getEndDate());
             dto.setDaysOfWeek(regularLecture.getDaysOfWeek());
         }
+        dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages() : null);
 
         return dto;
     }
@@ -74,7 +75,7 @@ public class LectureConverter {
         dto.setName(lecture.getName());
         dto.setType(lecture instanceof OneDayLecture ? "OneDay" : "Regular");
         dto.setPrice(lecture.getPrice());
-        dto.setImageUrl(lecture.getLectureImages());
+        dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages() : null);
         return dto;
     }
 }
