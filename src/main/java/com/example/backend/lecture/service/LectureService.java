@@ -1,5 +1,6 @@
 package com.example.backend.lecture.service;
 
+import com.example.backend.category.Category;
 import com.example.backend.image.service.ImageService;
 import com.example.backend.lecture.entity.Lecture;
 import com.example.backend.lecture.entity.LectureImage;
@@ -103,8 +104,13 @@ public class LectureService {
     }
 
     // 모든 강의 조회
-    public List<LectureListResponseDTO> getAllLecture(){
-        return lectureRepository.findAll().stream()
+    public List<LectureListResponseDTO> getLectureByCategory(Category category){
+        if (category == Category.all){
+            return lectureRepository.findAll().stream()
+                    .map(LectureConverter::lectureListConverter)
+                    .collect(Collectors.toList());
+        }
+        return lectureRepository.findByCategory(category).stream()
                 .map(LectureConverter::lectureListConverter)
                 .collect(Collectors.toList());
     }
