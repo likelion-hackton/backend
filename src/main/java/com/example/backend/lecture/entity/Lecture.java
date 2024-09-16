@@ -64,6 +64,10 @@ public class Lecture {
     private Category category;
 
     @JsonManagedReference
+    @OneToOne(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private LectureCount lectureCount;
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Participant> participants;
 
