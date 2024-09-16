@@ -1,5 +1,6 @@
 package com.example.backend.lecture.controller;
 
+import com.example.backend.category.Category;
 import com.example.backend.lecture.entity.dto.request.CreateLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.request.CreateOneDayLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.request.CreateRegularLectureRequestDTO;
@@ -48,8 +49,8 @@ public class LectureController {
         return ResponseEntity.ok(lectureService.joinLecture(lecture_id, auth.getName()));
     }
 
-    @GetMapping("/all")
-    public ResponseEntity<List<LectureListResponseDTO>> getAllLecture(){
-        return ResponseEntity.ok(lectureService.getAllLecture());
+    @GetMapping("/category")
+    public ResponseEntity<List<LectureListResponseDTO>> getLectureByCategory(@RequestParam(defaultValue = "ALL", value = "category") String category){
+        return ResponseEntity.ok(lectureService.getLectureByCategory(category));
     }
 }

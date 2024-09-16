@@ -1,5 +1,6 @@
 package com.example.backend.lecture.entity.dto.request;
 
+import com.example.backend.category.Category;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -31,4 +32,7 @@ public class CreateLectureRequestDTO {
 
     @NotNull(message = "종료 시간이 비어있습니다.")
     private LocalTime endTime;
+
+    @NotNull(message = "카테고리가 비어있습니다.")
+    private Category category;
 }
