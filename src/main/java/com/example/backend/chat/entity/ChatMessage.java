@@ -37,5 +37,5 @@ public class ChatMessage {
     @NotNull
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_participant_id")
-    private ChatParticipant chatParticipant;
+    private ChatRoomMember chatRoomMember;
 }

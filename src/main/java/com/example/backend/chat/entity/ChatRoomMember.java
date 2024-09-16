@@ -16,7 +16,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class ChatParticipant {
+public class ChatRoomMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
