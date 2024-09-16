@@ -5,6 +5,7 @@ import com.example.backend.lecture.entity.OneDayLecture;
 import com.example.backend.lecture.entity.RegularLecture;
 import com.example.backend.lecture.entity.dto.request.CreateOneDayLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.request.CreateRegularLectureRequestDTO;
+import com.example.backend.lecture.entity.dto.response.LectureBannerResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
 import com.example.backend.review.entity.Review;
@@ -99,6 +100,14 @@ public class LectureConverter {
             dto.setAverageScore(0);
             dto.setScoreCount(0);
         }
+        return dto;
+    }
+
+    public static LectureBannerResponseDTO lectureBannerConverter(Lecture lecture){
+        LectureBannerResponseDTO dto = new LectureBannerResponseDTO();
+        dto.setId(lecture.getId());
+        dto.setName(lecture.getName());
+        dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages().get(0).getImageUrl() : null);
         return dto;
     }
 }
