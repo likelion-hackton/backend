@@ -20,7 +20,7 @@ public class MemberInfoController {
 
     @PatchMapping(value = "/edit", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<MemberInfoDetailResponseDTO> editInfo(@RequestPart("info") @Valid EditMemberInfoRequestDTO req,
-                                                                @RequestPart("images") MultipartFile image,
+                                                                @RequestPart(value = "images", required = false) MultipartFile image,
                                                                 Authentication auth){
         String email = auth.getName();
         return ResponseEntity.ok(memberInfoService.editMemberInfo(req, email ,image));
