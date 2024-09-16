@@ -30,10 +30,10 @@ public class ChatRoom {
     @NotBlank
     private String chatRoomName; // 채팅방 이름, 채팅방 해당하는 lecture 로 저장
 
-    @NotBlank
+    @NotNull
     private ChatRoomStatus chatRoomStatus; // 채팅방 타입 - sleep, activate, delete
 
-    @NotBlank
+    @NotNull
     private LocalDateTime created_at;
 
     @NotNull
