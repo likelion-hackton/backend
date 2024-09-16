@@ -74,8 +74,10 @@ public class LectureConverter {
                     .mapToLong(Review::getScore)
                     .average()
                     .orElse(0));
+            dto.setScoreCount((long) lecture.getReviews().size());
         }else {
             dto.setAverageScore(0);
+            dto.setScoreCount(0L);
         }
         dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages() : null);
 
@@ -95,10 +97,10 @@ public class LectureConverter {
                     .mapToLong(Review::getScore)
                     .average()
                     .orElse(0));
-            dto.setScoreCount(lecture.getReviews().size());
+            dto.setScoreCount((long) lecture.getReviews().size());
         }else {
             dto.setAverageScore(0);
-            dto.setScoreCount(0);
+            dto.setScoreCount(0L);
         }
         return dto;
     }
