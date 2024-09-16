@@ -1,6 +1,6 @@
-package com.example.backend.tag;
+package com.example.backend.category;
 
-public enum Tag {
+public enum Category {
     all,
     cook,
     art,

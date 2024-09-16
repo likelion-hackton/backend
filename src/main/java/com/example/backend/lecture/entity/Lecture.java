@@ -1,7 +1,7 @@
 package com.example.backend.lecture.entity;
 
 import com.example.backend.participant.entity.Participant;
-import com.example.backend.tag.Tag;
+import com.example.backend.category.Category;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -9,7 +9,6 @@ import jakarta.validation.constraints.*;
 import lombok.*;
 import lombok.experimental.SuperBuilder;
 
-import java.time.Instant;
 import java.time.LocalTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -61,7 +60,7 @@ public class Lecture {
     private String detailAddress;
 
     @Enumerated(EnumType.STRING)
-    private Tag tag;
+    private Category category;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
