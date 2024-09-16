@@ -40,8 +40,8 @@ public class LectureController {
     }
 
     @GetMapping("/own")
-    public ResponseEntity<List<LectureListResponseDTO>> getMyLecture(Authentication auth){
-        return ResponseEntity.ok(lectureService.getMyLecture(auth.getName()));
+    public ResponseEntity<List<LectureListResponseDTO>> getMyLecture(Authentication auth, @RequestParam("permission") String permission){
+        return ResponseEntity.ok(lectureService.getMyLecture(auth.getName(), permission));
     }
 
     @PostMapping("/join")

@@ -121,13 +121,13 @@ public class LectureService {
     }
 
     // 내가 참가한 강의 조회
-    public List<LectureListResponseDTO> getMyLecture(String email){
+    public List<LectureListResponseDTO> getMyLecture(String email, String permission){
         Member member = memberRepository.findByEmail(email).orElse(null);
         if(member == null){
             logger.warn("사용자 찾을 수 없음");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
         }
-        return participantRepository.findLecturesByMemberId(member.getId()).stream()
+        return participantRepository.findLecturesByMemberIdAndRole(member.getId(), permission.toUpperCase()).stream()
                 .map(LectureConverter::lectureListConverter)
                 .collect(Collectors.toList());
     }
