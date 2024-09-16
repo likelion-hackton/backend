@@ -8,4 +8,5 @@ import java.util.List;
 
 public interface LectureRepository extends JpaRepository<Lecture, Long> {
     List<Lecture> findByCategory(Category category);
+    List<Lecture> findByNameContainingOrDescriptionContaining(String name, String description);
 }
