@@ -60,7 +60,7 @@ public class Lecture {
     private String detailAddress;
 
     @Enumerated(EnumType.STRING)
-    @NotBlank
+    @NotNull
     private Category category;
 
     @JsonManagedReference

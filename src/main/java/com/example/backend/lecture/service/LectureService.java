@@ -105,7 +105,7 @@ public class LectureService {
 
     // 모든 강의 조회
     public List<LectureListResponseDTO> getLectureByCategory(Category category){
-        if (category == Category.all){
+        if (category == Category.ALL){
             return lectureRepository.findAll().stream()
                     .map(LectureConverter::lectureListConverter)
                     .collect(Collectors.toList());

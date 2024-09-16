@@ -50,7 +50,7 @@ public class LectureController {
     }
 
     @GetMapping("/category")
-    public ResponseEntity<List<LectureListResponseDTO>> getLectureByCategory(@RequestParam(defaultValue = "ALL") Category category){
+    public ResponseEntity<List<LectureListResponseDTO>> getLectureByCategory(@RequestParam(defaultValue = "ALL", value = "category") Category category){
         return ResponseEntity.ok(lectureService.getLectureByCategory(category));
     }
 }
