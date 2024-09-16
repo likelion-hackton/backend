@@ -78,7 +78,6 @@ public class LectureConverter {
         dto.setName(lecture.getName());
         dto.setType(lecture instanceof OneDayLecture ? "OneDay" : "Regular");
         dto.setPrice(lecture.getPrice());
+        dto.setSearchCount(lecture.getLectureCount() != null ? lecture.getLectureCount().getViewCount() : 0);
         dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages() : null);
         return dto;
-    }
-}

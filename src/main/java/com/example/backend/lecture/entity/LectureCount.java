@@ -26,9 +26,10 @@ public class LectureCount {
     @JoinColumn(name = "lecture_id")
     private Lecture lecture;
 
-    private Long viewCount = 0L;
+    private Long viewCount;
 
-    public void incrementViewCount() {
-        this.viewCount++;
-    }
+    // Optimistic Locking을 위한 속성
+    // 동시성 제어
+    @Version
+    private Long version;
 }

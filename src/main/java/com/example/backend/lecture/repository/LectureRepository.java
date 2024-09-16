@@ -17,7 +17,7 @@ public interface LectureRepository extends JpaRepository<Lecture, Long> {
     List<Lecture> findByNameContainingOrDescriptionContaining(@Param("keyword") String keyword);
 
     // 조회된 강의 조회 1증가
-    @Modifying
+    @Modifying(clearAutomatically = true)
     @Query("UPDATE LectureCount lc SET lc.viewCount = lc.viewCount + 1 WHERE lc.lecture.id = :lectureId")
     void incrementViewCount(@Param("lectureId") Long lectureId);
 }

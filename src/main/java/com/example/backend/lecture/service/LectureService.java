@@ -2,11 +2,8 @@ package com.example.backend.lecture.service;
 
 import com.example.backend.category.Category;
 import com.example.backend.image.service.ImageService;
-import com.example.backend.lecture.entity.Lecture;
-import com.example.backend.lecture.entity.LectureImage;
+import com.example.backend.lecture.entity.*;
 import com.example.backend.lecture.converter.LectureConverter;
-import com.example.backend.lecture.entity.OneDayLecture;
-import com.example.backend.lecture.entity.RegularLecture;
 import com.example.backend.lecture.entity.dto.request.CreateLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.request.CreateOneDayLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.request.CreateRegularLectureRequestDTO;
@@ -136,11 +133,20 @@ public class LectureService {
     }
 
     // 텍스트로 강의 조회
+    @Transactional
     public List<LectureListResponseDTO> searchLectureByKeyword(String keyword){
         List<Lecture> findLectures = lectureRepository.findByNameContainingOrDescriptionContaining(keyword);
         for (Lecture lecture : findLectures){
+            if (lecture.getLectureCount() == null){
+                lecture.setLectureCount(LectureCount.builder().lecture(lecture).viewCount(0L).build());
+                lectureRepository.save(lecture);
+            }
             lectureRepository.incrementViewCount(lecture.getId());
+            lectureRepository.flush(); // 변경 사항 즉시 반영
         }
+
+        findLectures = lectureRepository.findAllById(findLectures.stream().map(Lecture::getId).collect(Collectors.toList()));
+
         return findLectures.stream()
                 .map(LectureConverter::lectureListConverter)
                 .collect(Collectors.toList());
