@@ -10,13 +10,13 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Entity
-@Table(name = "ChatParticipant")
+@Table(name = "ChatParticipant") // 수정해야함
 @Builder(toBuilder = true)
 @Getter
 @NoArgsConstructor
 @AllArgsConstructor
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
-public class ChatParticipant {
+public class ChatRoomMember {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,4 +34,8 @@ public class ChatParticipant {
 
     @NotNull
     private Boolean isLectureOwner;
+
+    public void setIsLectureOwner(Boolean isLectureOwner) {
+        this.isLectureOwner = isLectureOwner;
+    }
 }
