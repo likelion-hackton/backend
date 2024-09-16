@@ -1,5 +1,6 @@
 package com.example.backend.lecture.entity.dto.response;
 
+import com.example.backend.category.Category;
 import com.example.backend.lecture.entity.LectureImage;
 import jakarta.validation.constraints.*;
 import lombok.*;
@@ -57,6 +58,9 @@ public class LectureDetailResponseDTO {
     private String address;
 
     private String detailAddress;
+
+    @NotBlank(message = "카테고리가 비어있습니다.")
+    private Category category;
 
     private List<LectureImage> imageUrl;
 }

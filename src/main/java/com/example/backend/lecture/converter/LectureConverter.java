@@ -21,6 +21,7 @@ public class LectureConverter {
                 .date(req.getDate())
                 .address(req.getAddress())
                 .detailAddress(req.getDetailAddress())
+                .category(req.getCategory())
                 .build();
     }
 
@@ -37,6 +38,7 @@ public class LectureConverter {
                 .daysOfWeek(req.getDaysOfWeek())
                 .address(req.getAddress())
                 .detailAddress(req.getDetailAddress())
+                .category(req.getCategory())
                 .build();
     }
 
@@ -53,6 +55,7 @@ public class LectureConverter {
         dto.setMember_limit(lecture.getMember_limit());
         dto.setStartTime(lecture.getStartTime());
         dto.setEndTime(lecture.getEndTime());
+        dto.setCategory(lecture.getCategory());
         if (lecture instanceof OneDayLecture){
             OneDayLecture oneDayLecture = (OneDayLecture) lecture;
             dto.setType("OneDay");
