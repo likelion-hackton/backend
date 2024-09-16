@@ -103,8 +103,16 @@ public class LectureService {
         return LectureConverter.lectureDetailConverter(saveLecture);
     }
 
-    // 모든 강의 조회
-    public List<LectureListResponseDTO> getLectureByCategory(Category category){
+    // 카테고리로 강의 조회
+    public List<LectureListResponseDTO> getLectureByCategory(String categoryName){
+        Category category;
+        try {
+            category = Category.valueOf(categoryName.toUpperCase());
+        } catch (IllegalArgumentException e){
+            logger.warn("카테고리 존재하지 않음");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "카테고리 존재하지 않음");
+        }
+
         if (category == Category.ALL){
             return lectureRepository.findAll().stream()
                     .map(LectureConverter::lectureListConverter)
