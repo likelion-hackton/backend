@@ -53,4 +53,9 @@ public class LectureController {
     public ResponseEntity<List<LectureListResponseDTO>> getLectureByCategory(@RequestParam(defaultValue = "ALL", value = "category") String category){
         return ResponseEntity.ok(lectureService.getLectureByCategory(category));
     }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<LectureListResponseDTO>> searchLectureByKeyword(@RequestParam(value = "keyword") String keyword){
+        return ResponseEntity.ok(lectureService.searchLectureByKeyword(keyword));
+    }
 }
