@@ -89,12 +89,14 @@ public class LectureService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "접근 권한 없음");
         }*/
 
-        imageService.procesAndAddImages(lecture, images,
-                url -> {
-                    LectureImage image = new LectureImage();
-                    image.setImageUrl(url);
-                    return image;
-                }, Lecture::addImage);
+        if (images!=null && !images.isEmpty()){
+            imageService.procesAndAddImages(lecture, images,
+                    url -> {
+                        LectureImage image = new LectureImage();
+                        image.setImageUrl(url);
+                        return image;
+                    }, Lecture::addImage);
+        }
         Lecture saveLecture = lectureRepository.save(lecture);
         participantRepository.save(ParticipantConverter.createParticipantConverter(member, saveLecture));
         return LectureConverter.lectureDetailConverter(saveLecture);

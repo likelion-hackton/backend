@@ -11,7 +11,6 @@ import lombok.Setter;
 @NoArgsConstructor
 public class EditMemberInfoRequestDTO {
 
-    @NotBlank(message = "닉네임이 비어있습니다.")
     private String nickname;
 
     private String introduction;

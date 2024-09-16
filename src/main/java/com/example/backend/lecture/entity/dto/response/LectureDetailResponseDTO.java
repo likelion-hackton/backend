@@ -1,5 +1,6 @@
 package com.example.backend.lecture.entity.dto.response;
 
+import com.example.backend.lecture.entity.LectureImage;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -7,6 +8,7 @@ import java.time.DayOfWeek;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.List;
 import java.util.Set;
 
 @Getter
@@ -55,4 +57,6 @@ public class LectureDetailResponseDTO {
     private String address;
 
     private String detailAddress;
+
+    private List<LectureImage> imageUrl;
 }

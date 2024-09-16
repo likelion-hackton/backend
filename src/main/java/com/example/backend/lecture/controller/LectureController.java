@@ -24,7 +24,7 @@ public class LectureController {
 
     @PostMapping(value = "/create/oneday", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<LectureDetailResponseDTO> createOneDayLecture(@RequestPart("lecture") @Valid CreateOneDayLectureRequestDTO req,
-                                                                  @RequestPart("images") List<MultipartFile> images,
+                                                                  @RequestPart(value = "images", required = false) List<MultipartFile> images,
                                                                   Authentication auth){
         String email = auth.getName();
         return ResponseEntity.ok(lectureService.createOneDayLecture(req, email, images));
@@ -32,7 +32,7 @@ public class LectureController {
 
     @PostMapping(value = "/create/regular", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<LectureDetailResponseDTO> createRegularLecture(@RequestPart("lecture") @Valid CreateRegularLectureRequestDTO req,
-                                                                  @RequestPart("images") List<MultipartFile> images,
+                                                                  @RequestPart(value = "images", required = false) List<MultipartFile> images,
                                                                   Authentication auth){
         String email = auth.getName();
         return ResponseEntity.ok(lectureService.createRegularLecture(req, email, images));
