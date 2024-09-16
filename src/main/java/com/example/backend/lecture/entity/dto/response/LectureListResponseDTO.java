@@ -27,6 +27,5 @@ public class LectureListResponseDTO {
     @NotNull(message = "강의 가격이 비어있습니다.")
     private Long price;
 
-    @NotBlank(message = "이미지 주소가 비어있습니다.")
     private List<LectureImage> imageUrl;
 }
