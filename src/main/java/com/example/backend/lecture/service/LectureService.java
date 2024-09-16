@@ -85,10 +85,10 @@ public class LectureService {
     public LectureDetailResponseDTO createLectureCommon(Lecture lecture, Member member,
                                                   List<MultipartFile> images){
         // 해당 부분은 개최자 인증 전엔 일단 주석
-        /*if (member.getPermission().equals("USER")){ // 일반 유저라면 X
+        if (!member.getMemberInfo().getPermission().equals("CREATOR")){ // 일반 유저라면 X
             logger.warn("접근 권한 없음");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "접근 권한 없음");
-        }*/
+        }
 
         if (images!=null && !images.isEmpty()){
             imageService.procesAndAddImages(lecture, images,
