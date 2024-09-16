@@ -1,6 +1,7 @@
 package com.example.backend.lecture.entity;
 
 import com.example.backend.participant.entity.Participant;
+import com.example.backend.tag.Tag;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -58,6 +59,9 @@ public class Lecture {
     private String address;
 
     private String detailAddress;
+
+    @Enumerated(EnumType.STRING)
+    private Tag tag;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
