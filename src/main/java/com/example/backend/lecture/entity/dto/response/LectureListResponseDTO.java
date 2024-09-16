@@ -31,5 +31,7 @@ public class LectureListResponseDTO {
 
     private double averageScore;
 
+    private int scoreCount;
+
     private List<LectureImage> imageUrl;
 }

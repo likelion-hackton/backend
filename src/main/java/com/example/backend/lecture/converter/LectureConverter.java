@@ -94,8 +94,10 @@ public class LectureConverter {
                     .mapToLong(Review::getScore)
                     .average()
                     .orElse(0));
+            dto.setScoreCount(lecture.getReviews().size());
         }else {
             dto.setAverageScore(0);
+            dto.setScoreCount(0);
         }
         return dto;
     }
