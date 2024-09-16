@@ -135,6 +135,17 @@ public class LectureService {
                 .collect(Collectors.toList());
     }
 
+    // 텍스트로 강의 조회
+    public List<LectureListResponseDTO> searchLectureByKeyword(String keyword){
+        List<Lecture> findLectures = lectureRepository.findByNameContainingOrDescriptionContaining(keyword);
+        for (Lecture lecture : findLectures){
+            lectureRepository.incrementViewCount(lecture.getId());
+        }
+        return findLectures.stream()
+                .map(LectureConverter::lectureListConverter)
+                .collect(Collectors.toList());
+    }
+
     // 강의 참가
     @Transactional
     public LectureDetailResponseDTO joinLecture(Long lectureId, String email){
