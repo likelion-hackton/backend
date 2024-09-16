@@ -68,6 +68,14 @@ public class LectureConverter {
             dto.setEndDate(regularLecture.getEndDate());
             dto.setDaysOfWeek(regularLecture.getDaysOfWeek());
         }
+        if (lecture.getReviews() != null && lecture.getReviews().size() >= 5) {
+            dto.setAverageScore(lecture.getReviews().stream()
+                    .mapToLong(Review::getScore)
+                    .average()
+                    .orElse(0));
+        }else {
+            dto.setAverageScore(0);
+        }
         dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages() : null);
 
         return dto;
@@ -81,7 +89,7 @@ public class LectureConverter {
         dto.setPrice(lecture.getPrice());
         dto.setSearchCount(lecture.getLectureCount() != null ? lecture.getLectureCount().getViewCount() : 0);
         dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages() : null);
-        if (lecture.getReviews() != null && lecture.getReviews().size() >= 5) {
+        if (lecture.getReviews() != null ) {
             dto.setAverageScore(lecture.getReviews().stream()
                     .mapToLong(Review::getScore)
                     .average()
