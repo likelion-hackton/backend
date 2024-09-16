@@ -27,4 +27,8 @@ public class LectureCount {
     private Lecture lecture;
 
     private Long viewCount = 0L;
+
+    public void incrementViewCount() {
+        this.viewCount++;
+    }
 }
