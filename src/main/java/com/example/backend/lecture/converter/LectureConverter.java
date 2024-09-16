@@ -80,4 +80,7 @@ public class LectureConverter {
         dto.setPrice(lecture.getPrice());
         dto.setSearchCount(lecture.getLectureCount() != null ? lecture.getLectureCount().getViewCount() : 0);
         dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages() : null);
+        if (lecture)
         return dto;
+    }
+}
