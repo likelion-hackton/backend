@@ -4,6 +4,7 @@ import com.example.backend.category.Category;
 import com.example.backend.lecture.entity.dto.request.CreateLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.request.CreateOneDayLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.request.CreateRegularLectureRequestDTO;
+import com.example.backend.lecture.entity.dto.response.LectureBannerResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
 import com.example.backend.lecture.service.LectureService;
@@ -40,8 +41,8 @@ public class LectureController {
     }
 
     @GetMapping("/own")
-    public ResponseEntity<List<LectureListResponseDTO>> getMyLecture(Authentication auth){
-        return ResponseEntity.ok(lectureService.getMyLecture(auth.getName()));
+    public ResponseEntity<List<LectureListResponseDTO>> getMyLecture(Authentication auth, @RequestParam("permission") String permission){
+        return ResponseEntity.ok(lectureService.getMyLecture(auth.getName(), permission));
     }
 
     @PostMapping("/join")
@@ -52,5 +53,20 @@ public class LectureController {
     @GetMapping("/category")
     public ResponseEntity<List<LectureListResponseDTO>> getLectureByCategory(@RequestParam(defaultValue = "ALL", value = "category") String category){
         return ResponseEntity.ok(lectureService.getLectureByCategory(category));
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<List<LectureListResponseDTO>> searchLectureByKeyword(@RequestParam("keyword") String keyword){
+        return ResponseEntity.ok(lectureService.searchLectureByKeyword(keyword));
+    }
+
+    @GetMapping("/{lecture}")
+    public ResponseEntity<LectureDetailResponseDTO> lectureDetail(@PathVariable("lecture") Long lecture_id){
+        return ResponseEntity.ok(lectureService.lectureDetail(lecture_id));
+    }
+
+    @GetMapping("/banner")
+    private ResponseEntity<List<LectureBannerResponseDTO>> lectureBanner(){
+        return ResponseEntity.ok(lectureService.lectureBanner());
     }
 }

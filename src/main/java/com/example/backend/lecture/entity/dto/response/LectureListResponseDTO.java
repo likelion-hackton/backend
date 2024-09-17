@@ -27,5 +27,11 @@ public class LectureListResponseDTO {
     @NotNull(message = "강의 가격이 비어있습니다.")
     private Long price;
 
+    private Long searchCount;
+
+    private double averageScore;
+
+    private Long scoreCount;
+
     private List<LectureImage> imageUrl;
 }

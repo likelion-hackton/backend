@@ -5,8 +5,10 @@ import com.example.backend.lecture.entity.OneDayLecture;
 import com.example.backend.lecture.entity.RegularLecture;
 import com.example.backend.lecture.entity.dto.request.CreateOneDayLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.request.CreateRegularLectureRequestDTO;
+import com.example.backend.lecture.entity.dto.response.LectureBannerResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
+import com.example.backend.review.entity.Review;
 
 public class LectureConverter {
 
@@ -67,6 +69,16 @@ public class LectureConverter {
             dto.setEndDate(regularLecture.getEndDate());
             dto.setDaysOfWeek(regularLecture.getDaysOfWeek());
         }
+        if (lecture.getReviews() != null && lecture.getReviews().size() >= 5) {
+            dto.setAverageScore(lecture.getReviews().stream()
+                    .mapToLong(Review::getScore)
+                    .average()
+                    .orElse(0));
+            dto.setScoreCount((long) lecture.getReviews().size());
+        }else {
+            dto.setAverageScore(0);
+            dto.setScoreCount(0L);
+        }
         dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages() : null);
 
         return dto;
@@ -78,7 +90,26 @@ public class LectureConverter {
         dto.setName(lecture.getName());
         dto.setType(lecture instanceof OneDayLecture ? "OneDay" : "Regular");
         dto.setPrice(lecture.getPrice());
+        dto.setSearchCount(lecture.getLectureCount() != null ? lecture.getLectureCount().getViewCount() : 0);
         dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages() : null);
+        if (lecture.getReviews() != null ) {
+            dto.setAverageScore(lecture.getReviews().stream()
+                    .mapToLong(Review::getScore)
+                    .average()
+                    .orElse(0));
+            dto.setScoreCount((long) lecture.getReviews().size());
+        }else {
+            dto.setAverageScore(0);
+            dto.setScoreCount(0L);
+        }
+        return dto;
+    }
+
+    public static LectureBannerResponseDTO lectureBannerConverter(Lecture lecture){
+        LectureBannerResponseDTO dto = new LectureBannerResponseDTO();
+        dto.setId(lecture.getId());
+        dto.setName(lecture.getName());
+        dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages().get(0).getImageUrl() : null);
         return dto;
     }
 }

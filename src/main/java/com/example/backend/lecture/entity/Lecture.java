@@ -2,6 +2,7 @@ package com.example.backend.lecture.entity;
 
 import com.example.backend.participant.entity.Participant;
 import com.example.backend.category.Category;
+import com.example.backend.review.entity.Review;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -64,12 +65,20 @@ public class Lecture {
     private Category category;
 
     @JsonManagedReference
+    @OneToOne(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private LectureCount lectureCount;
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Participant> participants;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<LectureImage> lectureImages;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<Review> reviews;
 
     public void addImage(LectureImage image) {
         if (lectureImages == null) {

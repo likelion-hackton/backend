@@ -62,5 +62,9 @@ public class LectureDetailResponseDTO {
     @NotBlank(message = "카테고리가 비어있습니다.")
     private Category category;
 
+    private double averageScore;
+
+    private Long scoreCount;
+
     private List<LectureImage> imageUrl;
 }

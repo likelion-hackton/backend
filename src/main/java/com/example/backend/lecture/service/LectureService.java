@@ -2,14 +2,12 @@ package com.example.backend.lecture.service;
 
 import com.example.backend.category.Category;
 import com.example.backend.image.service.ImageService;
-import com.example.backend.lecture.entity.Lecture;
-import com.example.backend.lecture.entity.LectureImage;
+import com.example.backend.lecture.entity.*;
 import com.example.backend.lecture.converter.LectureConverter;
-import com.example.backend.lecture.entity.OneDayLecture;
-import com.example.backend.lecture.entity.RegularLecture;
 import com.example.backend.lecture.entity.dto.request.CreateLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.request.CreateOneDayLectureRequestDTO;
 import com.example.backend.lecture.entity.dto.request.CreateRegularLectureRequestDTO;
+import com.example.backend.lecture.entity.dto.response.LectureBannerResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
 import com.example.backend.lecture.repository.LectureRepository;
@@ -24,6 +22,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Primary;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,6 +102,25 @@ public class LectureService {
         return LectureConverter.lectureDetailConverter(saveLecture);
     }
 
+    // 강의 상세 조회
+    public LectureDetailResponseDTO lectureDetail(Long lecture_id){
+        Lecture lecture = lectureRepository.findById(lecture_id).orElse(null);
+        if(lecture == null){
+            logger.warn("강의 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "강의 찾을 수 없음");
+        }
+        return LectureConverter.lectureDetailConverter(lecture);
+    }
+
+    // 배너 강의 조회
+    public List<LectureBannerResponseDTO> lectureBanner(){
+        PageRequest topThree = PageRequest.of(0, 3);
+        List<Lecture> lectures = lectureRepository.findTop3ByOrderByViewCountDesc(topThree);
+        return lectures.stream()
+                .map(LectureConverter::lectureBannerConverter)
+                .collect(Collectors.toList());
+    }
+
     // 카테고리로 강의 조회
     public List<LectureListResponseDTO> getLectureByCategory(String categoryName){
         Category category;
@@ -124,13 +142,33 @@ public class LectureService {
     }
 
     // 내가 참가한 강의 조회
-    public List<LectureListResponseDTO> getMyLecture(String email){
+    public List<LectureListResponseDTO> getMyLecture(String email, String permission){
         Member member = memberRepository.findByEmail(email).orElse(null);
         if(member == null){
             logger.warn("사용자 찾을 수 없음");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
         }
-        return participantRepository.findLecturesByMemberId(member.getId()).stream()
+        return participantRepository.findLecturesByMemberIdAndRole(member.getId(), permission.toUpperCase()).stream()
+                .map(LectureConverter::lectureListConverter)
+                .collect(Collectors.toList());
+    }
+
+    // 텍스트로 강의 조회
+    @Transactional
+    public List<LectureListResponseDTO> searchLectureByKeyword(String keyword){
+        List<Lecture> findLectures = lectureRepository.findByNameContainingOrDescriptionContaining(keyword);
+        for (Lecture lecture : findLectures){
+            if (lecture.getLectureCount() == null){
+                lecture.setLectureCount(LectureCount.builder().lecture(lecture).viewCount(0L).build());
+                lectureRepository.save(lecture);
+            }
+            lectureRepository.incrementViewCount(lecture.getId());
+            lectureRepository.flush(); // 변경 사항 즉시 반영
+        }
+
+        findLectures = lectureRepository.findAllById(findLectures.stream().map(Lecture::getId).collect(Collectors.toList()));
+
+        return findLectures.stream()
                 .map(LectureConverter::lectureListConverter)
                 .collect(Collectors.toList());
     }
