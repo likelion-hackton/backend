@@ -71,6 +71,7 @@ public class ChatConverter {
         chatRoomInfoDTO.setNotReadMessageCount(chatMessageList.stream()
                 .filter(chatMessage -> !chatMessage.getIsRead())
                 .count());
+        chatRoomInfoDTO.setIsLectureOwner(chatRoomMember.getIsLectureOwner());
         return chatRoomInfoDTO;
     }
 
