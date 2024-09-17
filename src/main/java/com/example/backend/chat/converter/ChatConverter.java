@@ -1,10 +1,12 @@
 package com.example.backend.chat.converter;
 
+import com.example.backend.chat.entity.ChatMessage;
 import com.example.backend.chat.entity.ChatRoom;
 import com.example.backend.chat.entity.ChatRoomMember;
 import com.example.backend.chat.entity.dto.MessageInfoDTO;
 import com.example.backend.chat.entity.dto.response.ChatRoomInfoResponseDTO;
 import com.example.backend.common.enums.ChatRoomStatus;
+import com.example.backend.common.enums.MessageType;
 import com.example.backend.lecture.entity.Lecture;
 import com.example.backend.member.entity.Member;
 
@@ -36,5 +38,25 @@ public class ChatConverter {
         chatRoomInfoResponseDTO.setCreated_at(chatRoom.getCreated_at().toLocalDate());
         chatRoomInfoResponseDTO.setMessageList(messages);
         return chatRoomInfoResponseDTO;
+    }
+
+    public static ChatMessage createChatMessageConverter(String message, ChatRoomMember chatRoomMember){
+        return ChatMessage.builder()
+                .message(message)
+                .created_at(java.time.LocalDateTime.now())
+                .isRead(false)
+                .chatRoomMember(chatRoomMember)
+                .build();
+    }
+
+    public static MessageInfoDTO createMessageInfoDTOConverter(ChatMessage chatMessage, ChatRoomMember chatRoomMember){
+        MessageInfoDTO messageInfoDTO = new MessageInfoDTO();
+        messageInfoDTO.setMessage(chatMessage.getMessage());
+        messageInfoDTO.setMemberNickname(chatRoomMember.getMember().getMemberInfo().getNickname());
+        messageInfoDTO.setMemberImageUrl(chatRoomMember.getMember().getMemberInfo().getMemberInfoImage() != null
+                ? chatRoomMember.getMember().getMemberInfo().getMemberInfoImage().getImageUrl() : null);
+        messageInfoDTO.setMessageType(MessageType.SENDER);
+
+        return messageInfoDTO;
     }
 }
