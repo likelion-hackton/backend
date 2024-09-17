@@ -1,6 +1,7 @@
 package com.example.backend.chat.entity.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -18,4 +19,7 @@ public class ChatRoomInfoDTO {
     private Long notReadMessageCount;
 
     private String receiverNickName;
+
+    @NotNull
+    private Boolean isLectureOwner;
 }
