@@ -1,9 +1,14 @@
 package com.example.backend.chat.service;
 
 import com.example.backend.chat.converter.ChatConverter;
+import com.example.backend.chat.entity.ChatMessage;
 import com.example.backend.chat.entity.ChatRoom;
 import com.example.backend.chat.entity.ChatRoomMember;
+import com.example.backend.chat.entity.dto.MessageInfoDTO;
+import com.example.backend.chat.entity.dto.request.CreateChatRoomRequestDTO;
+import com.example.backend.chat.entity.dto.request.SendChatMessageRequest;
 import com.example.backend.chat.entity.dto.response.ChatRoomInfoResponseDTO;
+import com.example.backend.chat.repository.ChatMessageRepository;
 import com.example.backend.chat.repository.ChatRoomMemberRepository;
 import com.example.backend.chat.repository.ChatRoomRepository;
 import com.example.backend.lecture.entity.Lecture;
@@ -29,12 +34,15 @@ public class ChatService {
 
     private final ChatRoomRepository chatRoomRepository;
     private final ChatRoomMemberRepository chatRoomMemberRepository;
+    private final  ChatMessageRepository chatMessageRepository;
 
     private static final Logger logger = LoggerFactory.getLogger(ChatService.class);
 
     // 채팅방 생성
     @Transactional
-    public ChatRoomInfoResponseDTO createChatRoom(Long lectureId, String memberEmail){
+    public ChatRoomInfoResponseDTO createChatRoom(CreateChatRoomRequestDTO request, String memberEmail){
+        Long lectureId = request.getLectureId();
+
         // 존재하는 유저 인지 확인
         Member member = memberRepository.findByEmail(memberEmail).orElse(null);
         if (member == null) {
@@ -79,5 +87,37 @@ public class ChatService {
 
         // ChatRoomInfoResponseDTO 생성
         return ChatConverter.createChatRoomInfoResponseDTOConverter(chatRoom, member, null);
+    }
+
+    // 메세지 생성
+    @Transactional
+    public MessageInfoDTO sendChatMessage(SendChatMessageRequest request, String memberEmail){
+        // 존재하는 유저 인지 확인
+        Member member = memberRepository.findByEmail(memberEmail).orElse(null);
+        if (member == null) {
+            logger.warn("존재하지 않는 회원입니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다.");
+        }
+
+        // 존재하는 채팅방인지 확인
+        ChatRoom chatRoom = chatRoomRepository.findById(request.getChatRoomId()).orElse(null);
+        if (chatRoom == null) {
+            logger.warn("존재하지 않는 채팅방입니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 채팅방입니다.");
+        }
+
+        // 채팅방에 속한 멤버인지 확인
+        ChatRoomMember chatRoomMember = chatRoomMemberRepository.findByChatRoomAndMember(chatRoom, member).orElse(null);
+        if (chatRoomMember == null) {
+            logger.warn("채팅방에 속한 멤버가 아닙니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "채팅방에 속한 멤버가 아닙니다.");
+        }
+
+        // 메세지 저장
+        ChatMessage chatMessage = ChatConverter.createChatMessageConverter(request.getMessage(), chatRoomMember);
+        chatMessageRepository.save(chatMessage);
+
+        // MessageInfoDTO 생성
+        return ChatConverter.createMessageInfoDTOConverter(chatMessage, chatRoomMember);
     }
 }
