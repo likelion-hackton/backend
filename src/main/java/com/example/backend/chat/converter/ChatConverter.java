@@ -3,7 +3,9 @@ package com.example.backend.chat.converter;
 import com.example.backend.chat.entity.ChatMessage;
 import com.example.backend.chat.entity.ChatRoom;
 import com.example.backend.chat.entity.ChatRoomMember;
+import com.example.backend.chat.entity.dto.ChatRoomInfoDTO;
 import com.example.backend.chat.entity.dto.MessageInfoDTO;
+import com.example.backend.chat.entity.dto.response.ChatRoomAllResponseDTO;
 import com.example.backend.chat.entity.dto.response.ChatRoomInfoResponseDTO;
 import com.example.backend.common.enums.ChatRoomStatus;
 import com.example.backend.common.enums.MessageType;
@@ -58,5 +60,27 @@ public class ChatConverter {
         messageInfoDTO.setMessageType(MessageType.SENDER);
 
         return messageInfoDTO;
+    }
+
+    public static ChatRoomInfoDTO createChatRoomInfoDTOConverter(ChatRoomMember chatRoomMember, List<ChatMessage> chatMessageList) {
+        ChatRoomInfoDTO chatRoomInfoDTO = new ChatRoomInfoDTO();
+        chatRoomInfoDTO.setReceiverImageUrl(chatRoomMember.getMember().getMemberInfo().getMemberInfoImage() != null
+                ? chatRoomMember.getMember().getMemberInfo().getMemberInfoImage().getImageUrl() : null);
+        chatRoomInfoDTO.setReceiverNickName(chatRoomMember.getIsLectureOwner() ? chatRoomMember.getMember().getMemberInfo().getNickname() : null);
+        chatRoomInfoDTO.setChatRoomName(chatRoomMember.getChatRoom().getChatRoomName());
+        chatRoomInfoDTO.setNotReadMessageCount(chatMessageList.stream()
+                .filter(chatMessage -> !chatMessage.getIsRead())
+                .count());
+        chatRoomInfoDTO.setIsLectureOwner(chatRoomMember.getIsLectureOwner());
+        return chatRoomInfoDTO;
+    }
+
+    public static ChatRoomAllResponseDTO createChatRoomAllResponseDTOConverter(Member member, List<ChatRoomInfoDTO> chatRoomInfoDTOList) {
+        ChatRoomAllResponseDTO chatRoomAllResponseDTO = new ChatRoomAllResponseDTO();
+        chatRoomAllResponseDTO.setMemberInfoImageUrl(member.getMemberInfo().getMemberInfoImage() != null
+                ? member.getMemberInfo().getMemberInfoImage().getImageUrl() : null);
+        chatRoomAllResponseDTO.setChatRoomList(chatRoomInfoDTOList);
+        return chatRoomAllResponseDTO;
+
     }
 }

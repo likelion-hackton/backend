@@ -4,9 +4,11 @@ import com.example.backend.chat.converter.ChatConverter;
 import com.example.backend.chat.entity.ChatMessage;
 import com.example.backend.chat.entity.ChatRoom;
 import com.example.backend.chat.entity.ChatRoomMember;
+import com.example.backend.chat.entity.dto.ChatRoomInfoDTO;
 import com.example.backend.chat.entity.dto.MessageInfoDTO;
 import com.example.backend.chat.entity.dto.request.CreateChatRoomRequestDTO;
 import com.example.backend.chat.entity.dto.request.SendChatMessageRequest;
+import com.example.backend.chat.entity.dto.response.ChatRoomAllResponseDTO;
 import com.example.backend.chat.entity.dto.response.ChatRoomInfoResponseDTO;
 import com.example.backend.chat.repository.ChatMessageRepository;
 import com.example.backend.chat.repository.ChatRoomMemberRepository;
@@ -23,6 +25,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -119,5 +123,31 @@ public class ChatService {
 
         // MessageInfoDTO 생성
         return ChatConverter.createMessageInfoDTOConverter(chatMessage, chatRoomMember);
+    }
+
+    // 채팅방 전체 조회
+    public ChatRoomAllResponseDTO getChatRoomAll(String memberEmail){
+        // 존재하는 유저 인지 확인
+        // member : 현재 접속 중인 유저
+        Member member = memberRepository.findByEmail(memberEmail).orElse(null);
+        if (member == null) {
+            logger.warn("존재하지 않는 회원입니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다.");
+        }
+
+        // 멤버가 참가중인 채팅방 리스트 조회
+        List<ChatRoomMember> chatRoomMemberList = chatRoomMemberRepository.findAllByMember(member);
+
+        // ChatRoomInfoDTO list 생성
+        List<ChatRoomInfoDTO> chatRoomInfoDTOList = chatRoomMemberList.stream()
+                .map(chatRoomMember -> {
+                    List<ChatMessage> chatMessageList = chatMessageRepository.findAllByChatRoomMember(chatRoomMember);
+                    return ChatConverter.createChatRoomInfoDTOConverter(chatRoomMember, chatMessageList);
+                })
+                .toList();
+
+
+        // ChatRoomAllResponseDTO 생성
+        return ChatConverter.createChatRoomAllResponseDTOConverter(member, chatRoomInfoDTOList);
     }
 }
