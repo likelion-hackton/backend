@@ -10,6 +10,7 @@ import com.example.backend.lecture.entity.dto.request.CreateRegularLectureReques
 import com.example.backend.lecture.entity.dto.response.LectureBannerResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
+import com.example.backend.lecture.entity.dto.response.LectureMapResponseDTO;
 import com.example.backend.lecture.repository.LectureRepository;
 import com.example.backend.member.entity.Member;
 import com.example.backend.member.repository.MemberRepository;
@@ -173,6 +174,12 @@ public class LectureService {
                 .collect(Collectors.toList());
     }
 
+    public List<LectureMapResponseDTO> getLectureMap(){
+        return lectureRepository.findAll().stream()
+                .map(LectureConverter::lectureMapConverter)
+                .collect(Collectors.toList());
+    }
+
     // 강의 참가
     @Transactional
     public LectureDetailResponseDTO joinLecture(Long lectureId, String email){
@@ -186,9 +193,12 @@ public class LectureService {
             logger.warn("강의 찾을 수 없음");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "강의 찾을 수 없음");
         }
-        if (participantRepository.existsByLectureAndMember(lecture, member)){
+        if (participantRepository.existsByLectureAndMemberAndRole(lecture, member, "USER")){
             logger.warn("이미 참가한 강의");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 참가한 강의");
+        } else if (participantRepository.existsByLectureAndMemberAndRole(lecture, member, "CREATOR")){
+            logger.warn("내가 개최한 강의");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "내가 개최한 강의");
         }
         if (participantRepository.countByLecture(lecture) >= lecture.getMember_limit()) {
             logger.warn("강의 정원 가득참");

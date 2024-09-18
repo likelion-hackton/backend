@@ -8,6 +8,7 @@ import com.example.backend.lecture.entity.dto.request.CreateRegularLectureReques
 import com.example.backend.lecture.entity.dto.response.LectureBannerResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
+import com.example.backend.lecture.entity.dto.response.LectureMapResponseDTO;
 import com.example.backend.review.entity.Review;
 
 public class LectureConverter {
@@ -79,7 +80,7 @@ public class LectureConverter {
             dto.setAverageScore(0);
             dto.setScoreCount(0L);
         }
-        dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages() : null);
+        dto.setImageUrl(lecture.getLectureImages() != null && !lecture.getLectureImages().isEmpty() ? lecture.getLectureImages() : null);
 
         return dto;
     }
@@ -91,7 +92,7 @@ public class LectureConverter {
         dto.setType(lecture instanceof OneDayLecture ? "OneDay" : "Regular");
         dto.setPrice(lecture.getPrice());
         dto.setSearchCount(lecture.getLectureCount() != null ? lecture.getLectureCount().getViewCount() : 0);
-        dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages() : null);
+        dto.setImageUrl(lecture.getLectureImages() != null && !lecture.getLectureImages().isEmpty() ? lecture.getLectureImages() : null);
         if (lecture.getReviews() != null ) {
             dto.setAverageScore(lecture.getReviews().stream()
                     .mapToLong(Review::getScore)
@@ -110,6 +111,31 @@ public class LectureConverter {
         dto.setId(lecture.getId());
         dto.setName(lecture.getName());
         dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages().get(0).getImageUrl() : null);
+        return dto;
+    }
+
+    public static LectureMapResponseDTO lectureMapConverter(Lecture lecture){
+        LectureMapResponseDTO dto = new LectureMapResponseDTO();
+        dto.setId(lecture.getId());
+        dto.setCategory(lecture.getCategory());
+        dto.setName(lecture.getName());
+        dto.setPrice(lecture.getPrice());
+        dto.setLatitude(lecture.getLatitude());
+        dto.setLongitude(lecture.getLongitude());
+        dto.setAddress(lecture.getAddress());
+        dto.setDetailAddress(lecture.getDetailAddress() != null ? lecture.getDetailAddress() : "");
+        dto.setStartTime(lecture.getStartTime());
+        if (lecture instanceof OneDayLecture){
+            OneDayLecture oneDayLecture = (OneDayLecture) lecture;
+            dto.setType("OneDay");
+            dto.setDate(oneDayLecture.getDate());
+        } else if (lecture instanceof RegularLecture){
+            RegularLecture regularLecture = (RegularLecture) lecture;
+            dto.setType("Regular");
+            dto.setStartDate(regularLecture.getStartDate());
+            dto.setEndDate(regularLecture.getEndDate());
+        }
+        dto.setImageUrl(lecture.getLectureImages() != null && !lecture.getLectureImages().isEmpty() ? lecture.getLectureImages().get(0).getImageUrl() : null);
         return dto;
     }
 }
