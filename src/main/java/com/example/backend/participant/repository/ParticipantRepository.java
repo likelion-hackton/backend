@@ -18,8 +18,9 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
     @Query("SELECT p.lecture FROM Participant p WHERE p.member.id = :member_id AND p.role = :role")
     List<Lecture> findLecturesByMemberIdAndRole(@Param("member_id") Long member_id, @Param("role") String role);
 
-    @Query("SELECT COUNT(p) FROM Participant p WHERE p.lecture.id = :lectureId")
-    long findMemberIdByLectureId(@Param("lectureId") Long lectureId);
+    @Query("SELECT p.member.id FROM Participant p WHERE p.lecture.id = :lectureId AND p.role = :role")
+    Long findMemberIdByLectureIdAndRole(@Param("lectureId") Long lectureId, @Param("role") String role);
+
 
     @Query("SELECT DISTINCT p.lecture FROM Participant p WHERE p.member.id = :memberId")
     List<Lecture> findLecturesByMemberId(@Param("memberId") Long memberId);
