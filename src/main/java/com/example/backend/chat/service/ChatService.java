@@ -81,7 +81,7 @@ public class ChatService {
         chatRoomMemberRepository.save(chatRoomMember);
 
         // 채팅방 룸 멤버 생성(클래스 주최자 총 2명 추가)
-        Long lectureOwnerId = participantRepository.findMemberIdByLectureId(lectureId);
+        Long lectureOwnerId = participantRepository.findMemberIdByLectureIdAndRole(lectureId, "CREATOR");
         Member lectureOwner = memberRepository.findById(lectureOwnerId).orElse(null);
         if (lectureOwner == null) {
             logger.warn("강의 주최자가 존재하지 않습니다.");
