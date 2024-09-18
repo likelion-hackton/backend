@@ -51,13 +51,13 @@ public class ChatConverter {
                 .build();
     }
 
-    public static MessageInfoDTO createMessageInfoDTOConverter(ChatMessage chatMessage, ChatRoomMember chatRoomMember){
+    public static MessageInfoDTO createMessageInfoDTOConverter(ChatMessage chatMessage, ChatRoomMember chatRoomMember, Member member){
         MessageInfoDTO messageInfoDTO = new MessageInfoDTO();
         messageInfoDTO.setMessage(chatMessage.getMessage());
         messageInfoDTO.setMemberNickname(chatRoomMember.getMember().getMemberInfo().getNickname());
         messageInfoDTO.setMemberImageUrl(chatRoomMember.getMember().getMemberInfo().getMemberInfoImage() != null
                 ? chatRoomMember.getMember().getMemberInfo().getMemberInfoImage().getImageUrl() : null);
-        messageInfoDTO.setMessageType(MessageType.SENDER);
+        messageInfoDTO.setMessageType(chatRoomMember.getMember() == member ? MessageType.SENDER : MessageType.RECEIVER);
 
         return messageInfoDTO;
     }
@@ -72,6 +72,7 @@ public class ChatConverter {
                 .filter(chatMessage -> !chatMessage.getIsRead())
                 .count());
         chatRoomInfoDTO.setIsLectureOwner(chatRoomMember.getIsLectureOwner());
+        chatRoomInfoDTO.setChatRoomId(chatRoomMember.getChatRoom().getId());
         return chatRoomInfoDTO;
     }
 
