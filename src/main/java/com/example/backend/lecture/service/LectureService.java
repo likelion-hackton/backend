@@ -10,6 +10,7 @@ import com.example.backend.lecture.entity.dto.request.CreateRegularLectureReques
 import com.example.backend.lecture.entity.dto.response.LectureBannerResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
+import com.example.backend.lecture.entity.dto.response.LectureMapResponseDTO;
 import com.example.backend.lecture.repository.LectureRepository;
 import com.example.backend.member.entity.Member;
 import com.example.backend.member.repository.MemberRepository;
@@ -170,6 +171,12 @@ public class LectureService {
 
         return findLectures.stream()
                 .map(LectureConverter::lectureListConverter)
+                .collect(Collectors.toList());
+    }
+
+    public List<LectureMapResponseDTO> getLectureMap(){
+        return lectureRepository.findAll().stream()
+                .map(LectureConverter::lectureMapConverter)
                 .collect(Collectors.toList());
     }
 
