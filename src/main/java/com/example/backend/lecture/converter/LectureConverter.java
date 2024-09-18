@@ -133,7 +133,6 @@ public class LectureConverter {
             RegularLecture regularLecture = (RegularLecture) lecture;
             dto.setType("Regular");
             dto.setStartDate(regularLecture.getStartDate());
-            dto.setEndDate(regularLecture.getEndDate());
         }
         dto.setImageUrl(lecture.getLectureImages() != null && !lecture.getLectureImages().isEmpty() ? lecture.getLectureImages().get(0).getImageUrl() : null);
         return dto;
