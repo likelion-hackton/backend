@@ -12,7 +12,7 @@ import java.util.List;
 
 public interface ParticipantRepository extends JpaRepository<Participant, Long> {
     long countByLecture(Lecture lecture);
-    boolean existsByLectureAndMember(Lecture lecture, Member member);
+    boolean existsByLectureAndMemberAndRole(Lecture lecture, Member member, String role);
 
 
     @Query("SELECT p.lecture FROM Participant p WHERE p.member.id = :member_id AND p.role = :role")
