@@ -80,7 +80,7 @@ public class LectureConverter {
             dto.setAverageScore(0);
             dto.setScoreCount(0L);
         }
-        dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages() : null);
+        dto.setImageUrl(lecture.getLectureImages() != null && !lecture.getLectureImages().isEmpty() ? lecture.getLectureImages() : null);
 
         return dto;
     }
@@ -92,7 +92,7 @@ public class LectureConverter {
         dto.setType(lecture instanceof OneDayLecture ? "OneDay" : "Regular");
         dto.setPrice(lecture.getPrice());
         dto.setSearchCount(lecture.getLectureCount() != null ? lecture.getLectureCount().getViewCount() : 0);
-        dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages() : null);
+        dto.setImageUrl(lecture.getLectureImages() != null && !lecture.getLectureImages().isEmpty() ? lecture.getLectureImages() : null);
         if (lecture.getReviews() != null ) {
             dto.setAverageScore(lecture.getReviews().stream()
                     .mapToLong(Review::getScore)
@@ -135,7 +135,7 @@ public class LectureConverter {
             dto.setStartDate(regularLecture.getStartDate());
             dto.setEndDate(regularLecture.getEndDate());
         }
-        dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages().get(0).getImageUrl() : null);
+        dto.setImageUrl(lecture.getLectureImages() != null && !lecture.getLectureImages().isEmpty() ? lecture.getLectureImages().get(0).getImageUrl() : null);
         return dto;
     }
 }
