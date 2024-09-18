@@ -35,4 +35,11 @@ public class ChatController {
     public ResponseEntity<ChatRoomAllResponseDTO> getChatRoomAll(Authentication auth){
         return ResponseEntity.ok(chatService.getChatRoomAll(auth.getName()));
     }
+
+    // 채팅방 상세 보기 (개인 챗 보기)
+    @GetMapping("/chatRoom")
+    public ResponseEntity<ChatRoomInfoResponseDTO> getChatRoom(@RequestParam Long chatRoomId, Authentication auth){
+        return ResponseEntity.ok(chatService.getChatRoom(chatRoomId, auth.getName()));
+    }
+
 }

@@ -11,6 +11,9 @@ import lombok.Setter;
 @NoArgsConstructor
 public class ChatRoomInfoDTO {
 
+    @NotNull
+    private Long chatRoomId;
+
     private String receiverImageUrl;
 
     @NotBlank
