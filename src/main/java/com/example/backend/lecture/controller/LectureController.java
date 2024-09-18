@@ -7,6 +7,7 @@ import com.example.backend.lecture.entity.dto.request.CreateRegularLectureReques
 import com.example.backend.lecture.entity.dto.response.LectureBannerResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
+import com.example.backend.lecture.entity.dto.response.LectureMapResponseDTO;
 import com.example.backend.lecture.service.LectureService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -66,7 +67,12 @@ public class LectureController {
     }
 
     @GetMapping("/banner")
-    private ResponseEntity<List<LectureBannerResponseDTO>> lectureBanner(){
+    public ResponseEntity<List<LectureBannerResponseDTO>> lectureBanner(){
         return ResponseEntity.ok(lectureService.lectureBanner());
+    }
+
+    @GetMapping("/map")
+    public ResponseEntity<List<LectureMapResponseDTO>> lectureMap(){
+        return ResponseEntity.ok(lectureService.getLectureMap());
     }
 }
