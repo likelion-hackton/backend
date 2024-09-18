@@ -135,6 +135,7 @@ public class LectureConverter {
             dto.setStartDate(regularLecture.getStartDate());
             dto.setEndDate(regularLecture.getEndDate());
         }
+        dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages().get(0).getImageUrl() : null);
         return dto;
     }
 }
