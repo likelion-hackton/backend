@@ -26,6 +26,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -122,7 +124,7 @@ public class ChatService {
         chatMessageRepository.save(chatMessage);
 
         // MessageInfoDTO 생성
-        return ChatConverter.createMessageInfoDTOConverter(chatMessage, chatRoomMember);
+        return ChatConverter.createMessageInfoDTOConverter(chatMessage, chatRoomMember, member);
     }
 
     // 채팅방 전체 조회
@@ -149,5 +151,66 @@ public class ChatService {
 
         // ChatRoomAllResponseDTO 생성
         return ChatConverter.createChatRoomAllResponseDTOConverter(member, chatRoomInfoDTOList);
+    }
+
+    // 채팅방 상세 조회
+    public ChatRoomInfoResponseDTO getChatRoom(Long chatRoomId, String memberEmail) {
+        // 존재하는 유저 인지 확인
+        Member member = memberRepository.findByEmail(memberEmail).orElse(null);
+        if (member == null) {
+            logger.warn("존재하지 않는 회원입니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다.");
+        }
+
+        // 존재하는 채팅방인지 확인
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElse(null);
+        if (chatRoom == null) {
+            logger.warn("존재하지 않는 채팅방입니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 채팅방입니다.");
+        }
+
+        // 채팅방에 속한 멤버인지 확인(sender)
+        ChatRoomMember senderChatRoomMember = chatRoomMemberRepository.findByChatRoomAndMember(chatRoom, member).orElse(null);
+        if (senderChatRoomMember == null) {
+            logger.warn("채팅방에 속한 멤버가 아닙니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "채팅방에 속한 멤버가 아닙니다.");
+        }
+
+
+        // 채팅방에 속한 모든 멤버들 조회
+        List<ChatRoomMember> allChatRoomMembers = chatRoomMemberRepository.findAllByChatRoom(chatRoom);
+
+        // senderChatRoomMember가 아닌 나머지 멤버 찾기 (이 경우 receiver)
+        ChatRoomMember receiverChatRoomMember = allChatRoomMembers.stream()
+                .filter(chatRoomMember -> !chatRoomMember.equals(senderChatRoomMember))
+                .findFirst()
+                .orElse(null);
+
+        // receiver가 없는 경우 처리
+        if (receiverChatRoomMember == null) {
+            logger.warn("채팅방에 receiver가 없습니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "채팅방에 receiver가 없습니다.");
+        }
+
+        // 각각 sender, receiver의 메세지 리스트 조회
+        List<ChatMessage> senderChatMessageList = chatMessageRepository.findAllByChatRoomMember(senderChatRoomMember);
+        List<ChatMessage> receiverChatMessageList = chatMessageRepository.findAllByChatRoomMember(receiverChatRoomMember);
+
+        // 두 리스트를 합침
+        List<ChatMessage> combinedChatMessageList = new ArrayList<>();
+        combinedChatMessageList.addAll(senderChatMessageList);
+        combinedChatMessageList.addAll(receiverChatMessageList);
+
+        // 생성 시간을 기준으로 정렬
+        combinedChatMessageList.sort(Comparator.comparing(ChatMessage::getCreated_at));
+
+        // MessageInfoDTO list 생성
+        List<MessageInfoDTO> messageInfoDTOList = combinedChatMessageList.stream()
+                .map(chatMessage -> {
+                    ChatRoomMember chatRoomMember = chatMessage.getChatRoomMember();
+                    return ChatConverter.createMessageInfoDTOConverter(chatMessage, chatRoomMember, member);
+                }).toList();
+
+        return ChatConverter.createChatRoomInfoResponseDTOConverter(chatRoom, member, messageInfoDTOList);
     }
 }
