@@ -66,5 +66,7 @@ public class LectureDetailResponseDTO {
 
     private Long scoreCount;
 
+    private Long remainingSpace;
+
     private List<LectureImage> imageUrl;
 }
