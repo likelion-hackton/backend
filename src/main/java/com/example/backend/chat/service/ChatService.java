@@ -71,6 +71,18 @@ public class ChatService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 채팅방이 존재합니다.");
         }
 
+        // 클래스 생성 멤버와 현재 유저가 같으면 채팅방 생성 불가
+        Long lectureCreatorId = participantRepository.findMemberIdByLectureIdAndRole(lectureId, "CREATOR");
+        Member lectureCreator = memberRepository.findById(lectureCreatorId).orElse(null);
+        if (lectureCreator == null) {
+            logger.warn("강의 주최자가 존재하지 않습니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "강의 주최자가 존재하지 않습니다.");
+        }
+        if (lectureCreator == member) {
+            logger.warn("강의 주최자는 채팅방을 생성할 수 없습니다.");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "강의 주최자는 채팅방을 생성할 수 없습니다.");
+        }
+
         // 채팅방 생성
         ChatRoom chatRoom = ChatConverter.createChatRoomConverter(lecture);
         chatRoomRepository.save(chatRoom);
