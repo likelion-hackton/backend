@@ -35,19 +35,19 @@ public class ReviewController {
 
     // 디테일 리뷰 조회
     @GetMapping("/detail")
-    public ResponseEntity<ReviewDetailsDTO> readReviewDetail(@RequestParam Long reviewId){
+    public ResponseEntity<ReviewDetailsDTO> readReviewDetail(@RequestParam("reviewID") Long reviewId){
         return ResponseEntity.ok(reviewService.readReviewDetail(reviewId));
     }
 
     // 리뷰 전체 조회
     @GetMapping("/")
-    public ResponseEntity<List<ReviewAllDTO>> readReviewList(@RequestParam Long lectureId){
+    public ResponseEntity<List<ReviewAllDTO>> readReviewList(@RequestParam("lectureId") Long lectureId){
         return ResponseEntity.ok(reviewService.readReviewList(lectureId));
     }
 
     // 리뷰 평균 별점 조회
     @GetMapping("/score/average")
-    public ResponseEntity<ReviewScoreResponseDTO> readReviewAverageScore(@RequestParam Long lectureId){
+    public ResponseEntity<ReviewScoreResponseDTO> readReviewAverageScore(@RequestParam("lectureId") Long lectureId){
         return ResponseEntity.ok(reviewService.getReviewAvgScore(lectureId));
     }
 
@@ -60,25 +60,25 @@ public class ReviewController {
 
     // 좋아요 선택
     @PostMapping("/like")
-    public ResponseEntity<Long> likeReview(@RequestParam Long reviewId, Authentication auth){
+    public ResponseEntity<Long> likeReview(@RequestParam("reviewId") Long reviewId, Authentication auth){
         return ResponseEntity.ok(reviewService.likeReview(reviewId, auth.getName()));
     }
 
     // 싫어요 선택
     @PostMapping("/disLike")
-    public ResponseEntity<Long> disLikeReview(@RequestParam Long reviewId, Authentication auth){
+    public ResponseEntity<Long> disLikeReview(@RequestParam("reviewId") Long reviewId, Authentication auth){
         return ResponseEntity.ok(reviewService.disLikeReview(reviewId, auth.getName()));
     }
 
     // 좋아요 취소
     @DeleteMapping("/like")
-    public ResponseEntity<Long> cancelLikeReview(@RequestParam Long reviewId, Authentication auth){
+    public ResponseEntity<Long> cancelLikeReview(@RequestParam("reviewId") Long reviewId, Authentication auth){
         return ResponseEntity.ok(reviewService.cancelLikeReview(reviewId, auth.getName()));
     }
 
     // 싫어요 취소
     @DeleteMapping("/disLike")
-    public ResponseEntity<Long> cancelDisLikeReview(@RequestParam Long reviewId, Authentication auth){
+    public ResponseEntity<Long> cancelDisLikeReview(@RequestParam("reviewId") Long reviewId, Authentication auth){
         return ResponseEntity.ok(reviewService.cancelDisLikeReview(reviewId, auth.getName()));
     }
 }
