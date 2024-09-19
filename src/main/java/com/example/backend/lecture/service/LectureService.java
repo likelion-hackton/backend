@@ -200,7 +200,7 @@ public class LectureService {
             logger.warn("내가 개최한 강의");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "내가 개최한 강의");
         }
-        if (participantRepository.countByLecture(lecture) >= lecture.getMember_limit()) {
+        if (participantRepository.sumMemberCountByLectureAndRole(lecture, "USER") >= lecture.getMember_limit()) {
             logger.warn("강의 정원 가득참");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "강의 정원 가득참");
         }

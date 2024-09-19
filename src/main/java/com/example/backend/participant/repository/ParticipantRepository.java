@@ -11,7 +11,6 @@ import org.springframework.data.repository.query.Param;
 import java.util.List;
 
 public interface ParticipantRepository extends JpaRepository<Participant, Long> {
-    long countByLecture(Lecture lecture);
     boolean existsByLectureAndMemberAndRole(Lecture lecture, Member member, String role);
 
     @Query("SELECT p.lecture FROM Participant p WHERE p.member.id = :member_id AND p.role = :role")
@@ -21,7 +20,7 @@ public interface ParticipantRepository extends JpaRepository<Participant, Long> 
     Long findMemberIdByLectureIdAndRole(@Param("lectureId") Long lectureId, @Param("role") String role);
 
     @Query("SELECT SUM(p.memberCount) FROM Participant p " +
-            "WHERE p.lecture.id = :lectureId AND p.role = :role")
-    Long sumMemberCountByLectureIdAndRole(@Param("lectureId") Long lectureId,
+            "WHERE p.lecture = :lecture AND p.role = :role")
+    Long sumMemberCountByLectureAndRole(@Param("lecture") Lecture lecture,
                                           @Param("role") String role);
 }
