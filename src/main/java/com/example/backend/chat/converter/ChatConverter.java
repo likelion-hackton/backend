@@ -62,17 +62,17 @@ public class ChatConverter {
         return messageInfoDTO;
     }
 
-    public static ChatRoomInfoDTO createChatRoomInfoDTOConverter(ChatRoomMember chatRoomMember, List<ChatMessage> chatMessageList) {
+    public static ChatRoomInfoDTO createChatRoomInfoDTOConverter(ChatRoomMember senderChatRoomMember, ChatRoomMember recevierChatRoomMember,List<ChatMessage> chatMessageList) {
         ChatRoomInfoDTO chatRoomInfoDTO = new ChatRoomInfoDTO();
-        chatRoomInfoDTO.setReceiverImageUrl(chatRoomMember.getMember().getMemberInfo().getMemberInfoImage() != null
-                ? chatRoomMember.getMember().getMemberInfo().getMemberInfoImage().getImageUrl() : null);
-        chatRoomInfoDTO.setReceiverNickName(chatRoomMember.getIsLectureOwner() ? chatRoomMember.getMember().getMemberInfo().getNickname() : null);
-        chatRoomInfoDTO.setChatRoomName(chatRoomMember.getChatRoom().getChatRoomName());
+        chatRoomInfoDTO.setReceiverImageUrl(recevierChatRoomMember.getMember().getMemberInfo().getMemberInfoImage() != null
+                ? recevierChatRoomMember.getMember().getMemberInfo().getMemberInfoImage().getImageUrl() : null);
+        chatRoomInfoDTO.setReceiverNickName(recevierChatRoomMember.getIsLectureOwner() ? recevierChatRoomMember.getMember().getMemberInfo().getNickname() : null);
+        chatRoomInfoDTO.setChatRoomName(senderChatRoomMember.getChatRoom().getChatRoomName());
         chatRoomInfoDTO.setNotReadMessageCount(chatMessageList.stream()
                 .filter(chatMessage -> !chatMessage.getIsRead())
                 .count());
-        chatRoomInfoDTO.setIsLectureOwner(chatRoomMember.getIsLectureOwner());
-        chatRoomInfoDTO.setChatRoomId(chatRoomMember.getChatRoom().getId());
+        chatRoomInfoDTO.setIsLectureOwner(senderChatRoomMember.getIsLectureOwner());
+        chatRoomInfoDTO.setChatRoomId(senderChatRoomMember.getChatRoom().getId());
         return chatRoomInfoDTO;
     }
 

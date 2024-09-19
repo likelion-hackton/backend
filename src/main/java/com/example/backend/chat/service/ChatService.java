@@ -138,13 +138,27 @@ public class ChatService {
         }
 
         // 멤버가 참가중인 채팅방 리스트 조회
-        List<ChatRoomMember> chatRoomMemberList = chatRoomMemberRepository.findAllByMember(member);
+        List<ChatRoomMember> senderChatRoomMemberList = chatRoomMemberRepository.findAllByMember(member);
 
         // ChatRoomInfoDTO list 생성
-        List<ChatRoomInfoDTO> chatRoomInfoDTOList = chatRoomMemberList.stream()
-                .map(chatRoomMember -> {
-                    List<ChatMessage> chatMessageList = chatMessageRepository.findAllByChatRoomMember(chatRoomMember);
-                    return ChatConverter.createChatRoomInfoDTOConverter(chatRoomMember, chatMessageList);
+        List<ChatRoomInfoDTO> chatRoomInfoDTOList = senderChatRoomMemberList.stream()
+                .map(senderChatRoomMember -> {
+                    List<ChatMessage> chatMessageList = chatMessageRepository.findAllByChatRoomMember(senderChatRoomMember);
+
+                    // 채팅방에 속한 모든 멤버들 조회
+                    List<ChatRoomMember> allChatRoomMembers = chatRoomMemberRepository.findAllByChatRoom(senderChatRoomMember.getChatRoom());
+
+                    // senderChatRoomMember가 아닌 나머지 멤버 찾기 (이 경우 receiver)
+                    ChatRoomMember receiverChatRoomMember = allChatRoomMembers.stream()
+                            .filter(chatRoomMember -> !chatRoomMember.equals(senderChatRoomMember))
+                            .findFirst()
+                            .orElse(null);
+                    // receiver가 없는 경우 처리
+                    if (receiverChatRoomMember == null) {
+                        logger.warn("채팅방에 receiver가 없습니다.");
+                        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "채팅방에 receiver가 없습니다.");
+                    }
+                    return ChatConverter.createChatRoomInfoDTOConverter(senderChatRoomMember, receiverChatRoomMember,chatMessageList);
                 })
                 .toList();
 
