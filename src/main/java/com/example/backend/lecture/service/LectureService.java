@@ -205,7 +205,7 @@ public class LectureService {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "강의 정원 가득참");
         }
 
-        participantRepository.save(ParticipantConverter.joinParticipantConverter(member, lecture));
+        participantRepository.save(ParticipantConverter.joinParticipantConverter(member, lecture, count));
         return LectureConverter.lectureDetailConverter(lecture);
     }
 
