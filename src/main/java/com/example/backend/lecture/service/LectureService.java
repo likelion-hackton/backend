@@ -100,7 +100,7 @@ public class LectureService {
         }
         Lecture saveLecture = lectureRepository.save(lecture);
         participantRepository.save(ParticipantConverter.createParticipantConverter(member, saveLecture));
-        return LectureConverter.lectureDetailConverter(saveLecture);
+        return LectureConverter.lectureDetailConverter(saveLecture, participantRepository.sumMemberCountByLectureAndRole(lecture, "USER"));
     }
 
     // 강의 상세 조회
@@ -110,7 +110,7 @@ public class LectureService {
             logger.warn("강의 찾을 수 없음");
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "강의 찾을 수 없음");
         }
-        return LectureConverter.lectureDetailConverter(lecture);
+        return LectureConverter.lectureDetailConverter(lecture, participantRepository.sumMemberCountByLectureAndRole(lecture, "USER"));
     }
 
     // 배너 강의 조회
@@ -200,13 +200,13 @@ public class LectureService {
             logger.warn("내가 개최한 강의");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "내가 개최한 강의");
         }
-        if (participantRepository.sumMemberCountByLectureAndRole(lecture, "USER") >= lecture.getMember_limit()) {
+        if (participantRepository.sumMemberCountByLectureAndRole(lecture, "USER") + count >= lecture.getMember_limit()) {
             logger.warn("강의 정원 가득참");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "강의 정원 가득참");
         }
 
         participantRepository.save(ParticipantConverter.joinParticipantConverter(member, lecture, count));
-        return LectureConverter.lectureDetailConverter(lecture);
+        return LectureConverter.lectureDetailConverter(lecture, participantRepository.sumMemberCountByLectureAndRole(lecture, "USER"));
     }
 
     private void setCoordinates(Lecture lecture, String address){
