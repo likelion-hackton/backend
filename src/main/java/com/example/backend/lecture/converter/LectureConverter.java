@@ -111,6 +111,17 @@ public class LectureConverter {
         dto.setId(lecture.getId());
         dto.setName(lecture.getName());
         dto.setImageUrl(lecture.getLectureImages() != null ? lecture.getLectureImages().get(0).getImageUrl() : null);
+        dto.setCategory(lecture.getCategory());
+        if (lecture instanceof OneDayLecture){
+            dto.setType("OneDay");
+            OneDayLecture oneDayLecture = (OneDayLecture) lecture;
+            dto.setDate(oneDayLecture.getDate());
+        } else if (lecture instanceof RegularLecture){
+            dto.setType("Regular");
+            RegularLecture regularLecture = (RegularLecture) lecture;
+            dto.setStartDate(regularLecture.getStartDate());
+            dto.setEndDate(regularLecture.getEndDate());
+        }
         return dto;
     }
 
