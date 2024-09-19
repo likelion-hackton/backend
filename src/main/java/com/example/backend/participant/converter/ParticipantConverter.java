@@ -15,11 +15,12 @@ public class ParticipantConverter {
                 .build();
     }
 
-    public static Participant joinParticipantConverter(Member member, Lecture lecture){
+    public static Participant joinParticipantConverter(Member member, Lecture lecture, Long count){
         return Participant.builder()
                 .member(member)
                 .lecture(lecture)
                 .role("USER")
+                .memberCount(count)
                 .build();
     }
 }

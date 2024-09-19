@@ -45,7 +45,7 @@ public class LectureConverter {
                 .build();
     }
 
-    public static LectureDetailResponseDTO lectureDetailConverter(Lecture lecture){
+    public static LectureDetailResponseDTO lectureDetailConverter(Lecture lecture, Long nowMemberCount){
         LectureDetailResponseDTO dto = new LectureDetailResponseDTO();
         dto.setId(lecture.getId());
         dto.setName(lecture.getName());
@@ -59,6 +59,7 @@ public class LectureConverter {
         dto.setStartTime(lecture.getStartTime());
         dto.setEndTime(lecture.getEndTime());
         dto.setCategory(lecture.getCategory());
+        dto.setRemainingSpace(nowMemberCount != null ? lecture.getMember_limit() - nowMemberCount : lecture.getMember_limit());
         if (lecture instanceof OneDayLecture){
             OneDayLecture oneDayLecture = (OneDayLecture) lecture;
             dto.setType("OneDay");

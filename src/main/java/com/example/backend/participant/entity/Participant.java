@@ -5,6 +5,7 @@ import com.example.backend.member.entity.Member;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
 
 @Entity
@@ -20,6 +21,8 @@ public class Participant {
 
     @NotBlank
     private String role;
+
+    private Long memberCount;
 
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
