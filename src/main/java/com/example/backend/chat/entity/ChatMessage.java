@@ -38,4 +38,8 @@ public class ChatMessage {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "chat_participant_id")
     private ChatRoomMember chatRoomMember;
+
+    public void setIsRead(Boolean isRead) {
+        this.isRead = isRead;
+    }
 }
