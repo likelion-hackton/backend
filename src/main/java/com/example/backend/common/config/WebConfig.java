@@ -13,11 +13,11 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**") // 적용 url 패턴
-                .allowedOrigins("*") // 허용된 Origin
+                .allowedOrigins("http://localhost:3000", "https://momentclass.com") // 허용된 Origin
                 .allowedMethods("GET", "POST", "PATCH", "DELETE") // 허용된 Http Methods
                 .allowedHeaders("*") // 허용된 Header
                 .exposedHeaders("Authorization") // 허용된 Header 값
-                .allowCredentials(false) // 쿠키 인증 요청
+                .allowCredentials(true) // 쿠키 인증 요청
                 .maxAge(3600); // request 캐싱 시간
     }
 }
