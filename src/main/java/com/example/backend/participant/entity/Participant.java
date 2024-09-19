@@ -22,7 +22,6 @@ public class Participant {
     @NotBlank
     private String role;
 
-    @NotNull
     private Long memberCount;
 
     @JsonBackReference

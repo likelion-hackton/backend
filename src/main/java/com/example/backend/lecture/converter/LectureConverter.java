@@ -59,7 +59,7 @@ public class LectureConverter {
         dto.setStartTime(lecture.getStartTime());
         dto.setEndTime(lecture.getEndTime());
         dto.setCategory(lecture.getCategory());
-        dto.setRemainingSpace(lecture.getMember_limit() - nowMemberCount);
+        dto.setRemainingSpace(nowMemberCount != null ? lecture.getMember_limit() - nowMemberCount : lecture.getMember_limit());
         if (lecture instanceof OneDayLecture){
             OneDayLecture oneDayLecture = (OneDayLecture) lecture;
             dto.setType("OneDay");

@@ -200,7 +200,13 @@ public class LectureService {
             logger.warn("내가 개최한 강의");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "내가 개최한 강의");
         }
-        if (participantRepository.sumMemberCountByLectureAndRole(lecture, "USER") + count >= lecture.getMember_limit()) {
+        Long userCount = participantRepository.sumMemberCountByLectureAndRole(lecture, "USER");
+        if (userCount == null){
+            if (count > lecture.getMember_limit()) {
+                logger.warn("강의 정원 가득참");
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "강의 정원 가득참");
+            }
+        } else if (userCount + count > lecture.getMember_limit()){
             logger.warn("강의 정원 가득참");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "강의 정원 가득참");
         }
