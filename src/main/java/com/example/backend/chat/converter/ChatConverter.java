@@ -64,13 +64,18 @@ public class ChatConverter {
 
     public static ChatRoomInfoDTO createChatRoomInfoDTOConverter(ChatRoomMember senderChatRoomMember, ChatRoomMember recevierChatRoomMember,List<ChatMessage> chatMessageList) {
         ChatRoomInfoDTO chatRoomInfoDTO = new ChatRoomInfoDTO();
+
+        // 내가 보내지 않은 메세지 중에 읽지 않은 메세지 카운트
+        Long notReadMessageCount = chatMessageList.stream()
+                .filter(chatMessage -> chatMessage.getChatRoomMember().getMember() != senderChatRoomMember.getMember())
+                .filter(chatMessage -> !chatMessage.getIsRead())
+                .count();
+
         chatRoomInfoDTO.setReceiverImageUrl(recevierChatRoomMember.getMember().getMemberInfo().getMemberInfoImage() != null
                 ? recevierChatRoomMember.getMember().getMemberInfo().getMemberInfoImage().getImageUrl() : null);
         chatRoomInfoDTO.setReceiverNickName(recevierChatRoomMember.getIsLectureOwner() ? recevierChatRoomMember.getMember().getMemberInfo().getNickname() : null);
         chatRoomInfoDTO.setChatRoomName(senderChatRoomMember.getChatRoom().getChatRoomName());
-        chatRoomInfoDTO.setNotReadMessageCount(chatMessageList.stream()
-                .filter(chatMessage -> !chatMessage.getIsRead())
-                .count());
+        chatRoomInfoDTO.setNotReadMessageCount(notReadMessageCount);
         chatRoomInfoDTO.setIsLectureOwner(senderChatRoomMember.getIsLectureOwner());
         chatRoomInfoDTO.setChatRoomId(senderChatRoomMember.getChatRoom().getId());
         return chatRoomInfoDTO;
