@@ -182,7 +182,7 @@ public class LectureService {
 
     // 강의 참가
     @Transactional
-    public LectureDetailResponseDTO joinLecture(Long lectureId, String email){
+    public LectureDetailResponseDTO joinLecture(Long lectureId, Long count, String email){
         Member member = memberRepository.findByEmail(email).orElse(null);
         if(member == null){
             logger.warn("사용자 찾을 수 없음");

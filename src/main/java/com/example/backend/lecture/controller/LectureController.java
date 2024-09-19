@@ -47,8 +47,10 @@ public class LectureController {
     }
 
     @PostMapping("/join")
-    public ResponseEntity<LectureDetailResponseDTO> joinLecture(@RequestParam("lecture") Long lecture_id, Authentication auth){
-        return ResponseEntity.ok(lectureService.joinLecture(lecture_id, auth.getName()));
+    public ResponseEntity<LectureDetailResponseDTO> joinLecture(@RequestParam("lecture") Long lecture_id,
+                                                                @RequestParam("count") Long count,
+                                                                Authentication auth){
+        return ResponseEntity.ok(lectureService.joinLecture(lecture_id, count,auth.getName()));
     }
 
     @GetMapping("/category")
