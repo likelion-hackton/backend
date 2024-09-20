@@ -42,7 +42,8 @@ public class JwtTokenFilter extends OncePerRequestFilter {
             String header = request.getHeader(HttpHeaders.AUTHORIZATION);
 
             if (header == null || !header.startsWith("Bearer ")) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "인증 토큰이 없거나 유효하지 않습니다.");
+                filterChain.doFilter(request, response);
+                return;
             }
 
             String token = header.split(" ")[1];
