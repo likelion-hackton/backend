@@ -58,7 +58,7 @@ public class ReviewController {
         return ResponseEntity.ok("리뷰 삭제 성공");
     }
 
-    // 좋아요 선택
+    // 좋아요 선택,취소
     @PostMapping("/like")
     public ResponseEntity<Long> likeReview(@RequestParam("reviewId") Long reviewId, Authentication auth){
         return ResponseEntity.ok(reviewService.likeReview(reviewId, auth.getName()));
@@ -68,17 +68,5 @@ public class ReviewController {
     @PostMapping("/disLike")
     public ResponseEntity<Long> disLikeReview(@RequestParam("reviewId") Long reviewId, Authentication auth){
         return ResponseEntity.ok(reviewService.disLikeReview(reviewId, auth.getName()));
-    }
-
-    // 좋아요 취소
-    @DeleteMapping("/like")
-    public ResponseEntity<Long> cancelLikeReview(@RequestParam("reviewId") Long reviewId, Authentication auth){
-        return ResponseEntity.ok(reviewService.cancelLikeReview(reviewId, auth.getName()));
-    }
-
-    // 싫어요 취소
-    @DeleteMapping("/disLike")
-    public ResponseEntity<Long> cancelDisLikeReview(@RequestParam("reviewId") Long reviewId, Authentication auth){
-        return ResponseEntity.ok(reviewService.cancelDisLikeReview(reviewId, auth.getName()));
     }
 }
