@@ -215,6 +215,25 @@ public class LectureService {
         return LectureConverter.lectureDetailConverter(lecture, participantRepository.sumMemberCountByLectureAndRole(lecture, "USER"));
     }
 
+    @Transactional
+    public void deleteLecture(String email, Long lectureId){
+        Member member = memberRepository.findByEmail(email).orElse(null);
+        if(member == null){
+            logger.warn("사용자 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "사용자 찾을 수 없음");
+        }
+        Lecture lecture = lectureRepository.findById(lectureId).orElse(null);
+        if(lecture == null){
+            logger.warn("강의 찾을 수 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "강의 찾을 수 없음");
+        }
+        if (!participantRepository.existsByLectureAndMemberAndRole(lecture, member, "CREATOR")){
+            logger.warn("삭제 권한 없음");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "삭제 권한 없음");
+        }
+        lectureRepository.delete(lecture);
+    }
+
     private void setCoordinates(Lecture lecture, String address){
         webClient.get()
                 .uri(uriBuilder -> uriBuilder
