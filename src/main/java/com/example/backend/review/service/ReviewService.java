@@ -83,13 +83,14 @@ public class ReviewService {
         Review review = ReviewConverter.createReviewConverter(request, member, lecture);
 
         // image 저장
-        imageService.procesAndAddImages(review, images,
-                url -> {
-                    ReviewImage image = new ReviewImage();
-                    image.setImageUrl(url);
-                    return image;
-                }, Review::addImage);
-
+        if (images != null && !images.isEmpty()) {
+            imageService.procesAndAddImages(review, images,
+                    url -> {
+                        ReviewImage image = new ReviewImage();
+                        image.setImageUrl(url);
+                        return image;
+                    }, Review::addImage);
+        }
         // review 저장
         reviewRepository.save(review);
 
