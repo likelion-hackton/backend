@@ -229,7 +229,7 @@ public class LectureService {
         }
         if (!participantRepository.existsByLectureAndMemberAndRole(lecture, member, "CREATOR")){
             logger.warn("삭제 권한 없음");
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "삭제 권한 없음");
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "삭제 권한 없음");
         }
         lectureRepository.delete(lecture);
     }
