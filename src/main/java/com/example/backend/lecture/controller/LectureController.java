@@ -77,4 +77,10 @@ public class LectureController {
     public ResponseEntity<List<LectureMapResponseDTO>> lectureMap(){
         return ResponseEntity.ok(lectureService.getLectureMap());
     }
+
+    @DeleteMapping("/delete/{lecture}")
+    public ResponseEntity<String> deleteLecture(@PathVariable("lecture") Long lecture_id, Authentication auth){
+        lectureService.deleteLecture(auth.getName(), lecture_id);
+        return ResponseEntity.ok("강의 삭제 성공");
+    }
 }
