@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
 
 @Getter
 @Setter
@@ -27,7 +27,7 @@ public class ReviewAllDTO {
     private Long score;
 
     @NotNull(message = "리뷰 작성 시간이 비어있습니다.")
-    private LocalDateTime createdTime;
+    private LocalDate createdTime;
 
     @NotNull(message = "리뷰 좋아요 수가 비어있습니다.")
     private Long likeCount;
