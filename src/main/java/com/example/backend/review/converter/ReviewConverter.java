@@ -29,6 +29,7 @@ public class ReviewConverter {
         dto.setReviewImageUrl(review.getReviewImages() != null ? review.getReviewImages()  : null);
         dto.setMemberNickname(memberInfo.getNickname());
         dto.setMemberImageUrl(memberInfo.getMemberInfoImage() != null ? memberInfo.getMemberInfoImage().getImageUrl() : null);
+        dto.setCreatedTime(review.getCreated_at().toLocalDate());
         return dto;
     }
 }
