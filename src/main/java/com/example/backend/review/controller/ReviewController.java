@@ -27,7 +27,7 @@ public class ReviewController {
     // 리뷰 작성
     @PostMapping(value = "/write", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<ReviewDetailsDTO> writeReview(@RequestPart("review") @Valid ReviewWriteRequestDTO request,
-                                                        @RequestPart("images") List<MultipartFile> images,
+                                                        @RequestPart(value = "images", required = false) List<MultipartFile> images,
                                                         Authentication auth){
         // auth.getName() -> 유저 email
         return ResponseEntity.ok(reviewService.writeReview(request, images, auth.getName()));
