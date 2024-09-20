@@ -268,24 +268,35 @@ public class ReviewService {
 
         // 이미 좋아요를 눌렀으면 예외처리
         if (reviewLikeRepository.findByReviewAndMemberId(review, memberId) != null) {
-            logger.warn("이미 좋아요를 누른 리뷰입니다.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 좋아요를 누른 리뷰입니다.");
+            // reviewLike 검색
+            ReviewLike reviewLike = reviewLikeRepository.findByReviewAndMemberId(review, memberId);
+
+            // reviewLike 삭제
+            reviewLikeRepository.delete(reviewLike);
+
+            // review entity reviewLikeCount 감소
+            review.setLikeCount(review.getLikeCount() - 1);
+
+            // review 좋아요 수 세기
+            return reviewLikeRepository.countByReview(review);
+
+        } else {
+            // reviewLike 생성
+            ReviewLike reviewLike = ReviewLike.builder()
+                    .review(review)
+                    .memberId(memberId)
+                    .build();
+
+            // reviewLike 저장
+            reviewLikeRepository.save(reviewLike);
+
+            // review entity reviewLikeCount 증가
+            review.setLikeCount(review.getLikeCount() + 1);
+
+            // review 좋아요 수 세기
+            return reviewLikeRepository.countByReview(review);
         }
 
-        // reviewLike 생성
-        ReviewLike reviewLike = ReviewLike.builder()
-                .review(review)
-                .memberId(memberId)
-                .build();
-
-        // reviewLike 저장
-        reviewLikeRepository.save(reviewLike);
-
-        // review entity reviewLikeCount 증가
-        review.setLikeCount(review.getLikeCount() + 1);
-
-        // review 좋아요 수 세기
-        return reviewLikeRepository.countByReview(review);
     }
 
     // 싫어요
@@ -308,93 +319,33 @@ public class ReviewService {
 
         // 이미 싫어요를 눌렀으면 예외처리
         if (reviewDisLikeRepository.findByReviewAndMemberId(review, memberId) != null) {
-            logger.warn("이미 싫어요를 누른 리뷰입니다.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 싫어요를 누른 리뷰입니다.");
+            // reviewDisLike 검색
+            ReviewDisLike reviewDisLike = reviewDisLikeRepository.findByReviewAndMemberId(review, memberId);
+
+            // reviewDisLike 삭제
+            reviewDisLikeRepository.delete(reviewDisLike);
+
+            // review entity reviewDisLikeCount 감소
+            review.setDislikeCount(review.getDislikeCount() - 1);
+
+            // review 싫어요 수 세기
+            return reviewDisLikeRepository.countByReview(review);
+        } else {
+            // reviewDisLike 생성
+            ReviewDisLike reviewDisLike = ReviewDisLike.builder()
+                    .review(review)
+                    .memberId(memberId)
+                    .build();
+
+            // reviewDisLike 저장
+            reviewDisLikeRepository.save(reviewDisLike);
+
+            // review entity reviewDisLikeCount 증가
+            review.setDislikeCount(review.getDislikeCount() + 1);
+
+            // review 싫어요 수 세기
+            return reviewDisLikeRepository.countByReview(review);
         }
 
-        // reviewDisLike 생성
-        ReviewDisLike reviewDisLike = ReviewDisLike.builder()
-                .review(review)
-                .memberId(memberId)
-                .build();
-
-        // reviewDisLike 저장
-        reviewDisLikeRepository.save(reviewDisLike);
-
-        // review entity reviewDisLikeCount 증가
-        review.setDislikeCount(review.getDislikeCount() + 1);
-
-        // review 싫어요 수 세기
-        return reviewDisLikeRepository.countByReview(review);
-    }
-
-    // 좋아요 취소
-    @Transactional
-    public Long cancelLikeReview(Long reviewId, String email) {
-        // member email -> member 찾기
-        Member member = memberRepository.findByEmail(email).orElse(null);
-        if (member == null) {
-            logger.warn("존재하지 않는 회원입니다.");
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다.");
-        }
-        Long memberId = member.getId();
-
-        // review id -> review 찾기
-        Review review = reviewRepository.findById(reviewId).orElse(null);
-        if (review == null) {
-            logger.warn("존재하지 않는 리뷰입니다.");
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 리뷰입니다.");
-        }
-
-        // 좋아요를 누르지 않았으면 예외처리
-        ReviewLike reviewLike = reviewLikeRepository.findByReviewAndMemberId(review, memberId);
-        if (reviewLike == null) {
-            logger.warn("좋아요를 누르지 않은 리뷰입니다.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "좋아요를 누르지 않은 리뷰입니다.");
-        }
-
-        // reviewLike 삭제
-        reviewLikeRepository.delete(reviewLike);
-
-        // review entity reviewLikeCount 감소
-        review.setLikeCount(review.getLikeCount() - 1);
-
-        // review 좋아요 수 세기
-        return reviewLikeRepository.countByReview(review);
-    }
-
-    // 싫어요 취소
-    @Transactional
-    public Long cancelDisLikeReview(Long reviewId, String email) {
-        // member email -> member 찾기
-        Member member = memberRepository.findByEmail(email).orElse(null);
-        if (member == null) {
-            logger.warn("존재하지 않는 회원입니다.");
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다.");
-        }
-        Long memberId = member.getId();
-
-        // review id -> review 찾기
-        Review review = reviewRepository.findById(reviewId).orElse(null);
-        if (review == null) {
-            logger.warn("존재하지 않는 리뷰입니다.");
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 리뷰입니다.");
-        }
-
-        // 싫어요를 누르지 않았으면 예외처리
-        ReviewDisLike reviewDisLike = reviewDisLikeRepository.findByReviewAndMemberId(review, memberId);
-        if (reviewDisLike == null) {
-            logger.warn("싫어요를 누르지 않은 리뷰입니다.");
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "싫어요를 누르지 않은 리뷰입니다.");
-        }
-
-        // reviewDisLike 삭제
-        reviewDisLikeRepository.delete(reviewDisLike);
-
-        // review entity reviewDisLikeCount 감소
-        review.setDislikeCount(review.getDislikeCount() - 1);
-
-        // review 싫어요 수 세기
-        return reviewDisLikeRepository.countByReview(review);
     }
 }
