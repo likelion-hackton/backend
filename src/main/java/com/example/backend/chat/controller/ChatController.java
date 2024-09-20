@@ -42,4 +42,11 @@ public class ChatController {
         return ResponseEntity.ok(chatService.getChatRoom(chatRoomId, auth.getName()));
     }
 
+    // 채팅방 삭제
+    @DeleteMapping("/chatRoom/delete")
+    public ResponseEntity<String> deleteChatRoom(@RequestParam("chatRoomId") Long chatRoomId, Authentication auth){
+        chatService.deleteChatRoom(chatRoomId, auth.getName());
+        return ResponseEntity.ok("채팅방 삭제 성공");
+    }
+
 }

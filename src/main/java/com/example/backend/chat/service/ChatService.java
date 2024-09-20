@@ -258,4 +258,29 @@ public class ChatService {
 
         return ChatConverter.createChatRoomInfoResponseDTOConverter(chatRoom, member, messageInfoDTOList);
     }
+
+    @Transactional
+    public void deleteChatRoom(Long chatRoomId, String name) {
+        // 존재하는 유저 인지 확인
+        Member sendMember = memberRepository.findByEmail(name).orElse(null);
+        if (sendMember == null) {
+            logger.warn("존재하지 않는 회원입니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 회원입니다.");
+        }
+
+        // 존재하는 채팅방인지 확인
+        ChatRoom chatRoom = chatRoomRepository.findById(chatRoomId).orElse(null);
+        if (chatRoom == null) {
+            logger.warn("존재하지 않는 채팅방입니다.");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "존재하지 않는 채팅방입니다.");
+        }
+
+        // 채팅방 멤버 확인
+        List<ChatRoomMember> chatRoomMembers = chatRoomMemberRepository.findAllByChatRoom(chatRoom);
+
+        // 채팅 메세지 삭제 (cascade)
+        chatRoomMembers.forEach(chatMessageRepository::deleteAllByChatRoomMember);
+        chatRoomMemberRepository.deleteAllByChatRoom(chatRoom);
+        chatRoomRepository.delete(chatRoom);
+    }
 }
