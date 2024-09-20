@@ -161,7 +161,7 @@ public class ReviewService {
             dto.setMemberImageUrl(memberInfoImageMap.get(memberInfo.getId()) == null ? null : memberInfoImageMap.get(memberInfo.getId()).getImageUrl());
             dto.setReviewComment(review.getComment());
             dto.setScore(review.getScore());
-            dto.setCreatedTime(review.getCreated_at());
+            dto.setCreatedTime(review.getCreated_at().toLocalDate());
             dto.setLikeCount(review.getLikeCount());
             dto.setDislikeCount(review.getDislikeCount());
             reviewAllDTOs.add(dto);
