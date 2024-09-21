@@ -19,6 +19,7 @@ import com.example.backend.member.entity.Member;
 import com.example.backend.member.repository.MemberRepository;
 import com.example.backend.participant.repository.ParticipantRepository;
 import lombok.RequiredArgsConstructor;
+import org.hibernate.annotations.Cascade;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -65,8 +66,7 @@ public class ChatService {
 
         // 이미 채팅방이 존재하는지 확인
         // 먼저 chatRoom 이 존재하는지 확인 && chatRoomMember 에 해당 유저가 존재하는지 확인
-        if (chatRoomRepository.existsByLecture(lecture)
-                && chatRoomMemberRepository.existsByMember(member)) {
+        if (chatRoomRepository.existsByLectureAndAndChatRoomMember(lecture, chatRoomMemberRepository.findByMember(member))) {
             logger.warn("이미 채팅방이 존재합니다.");
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "이미 채팅방이 존재합니다.");
         }
