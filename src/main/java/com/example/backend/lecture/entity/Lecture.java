@@ -1,5 +1,6 @@
 package com.example.backend.lecture.entity;
 
+import com.example.backend.chat.entity.ChatRoom;
 import com.example.backend.participant.entity.Participant;
 import com.example.backend.category.Category;
 import com.example.backend.review.entity.Review;
@@ -79,6 +80,10 @@ public class Lecture {
     @JsonManagedReference
     @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     private List<Review> reviews;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "lecture", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    private List<ChatRoom> chatRooms;
 
     public void addImage(LectureImage image) {
         if (lectureImages == null) {
