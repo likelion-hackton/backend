@@ -11,11 +11,13 @@ import com.example.backend.lecture.entity.dto.response.LectureBannerResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureDetailResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureListResponseDTO;
 import com.example.backend.lecture.entity.dto.response.LectureMapResponseDTO;
+import com.example.backend.lecture.repository.LectureImageRepository;
 import com.example.backend.lecture.repository.LectureRepository;
 import com.example.backend.member.entity.Member;
 import com.example.backend.member.repository.MemberRepository;
 import com.example.backend.participant.converter.ParticipantConverter;
 import com.example.backend.participant.repository.ParticipantRepository;
+import com.example.backend.storage.service.StorageService;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
@@ -40,9 +42,11 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class LectureService {
     private final LectureRepository lectureRepository;
+    private final LectureImageRepository lectureImageRepository;
     private final MemberRepository memberRepository;
     private final ParticipantRepository participantRepository;
     private final ImageService imageService;
+    private final StorageService storageService;
     private final WebClient webClient;
 
     @Value("${spring.kakao.api.key}")
@@ -97,6 +101,7 @@ public class LectureService {
                         image.setImageUrl(url);
                         return image;
                     }, Lecture::addImage);
+            changeImage(lecture, images);
         }
         Lecture saveLecture = lectureRepository.save(lecture);
         participantRepository.save(ParticipantConverter.createParticipantConverter(member, saveLecture));
@@ -282,6 +287,33 @@ public class LectureService {
         } catch (IOException e){
             logger.warn("JSON 파싱 중 오류 발생");
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "JSON 파싱 중 오류 발생");
+        }
+    }
+
+    private void changeImage(Lecture lecture, List<MultipartFile> images){
+        if (lecture.getLectureImages() != null){
+            List<LectureImage> oldImages = lecture.getLectureImages();
+            lecture.setLectureImages(null);
+            lectureRepository.saveAndFlush(lecture);
+
+            lectureImageRepository.deleteAll(oldImages);
+            lectureImageRepository.flush();
+
+            for (LectureImage image : oldImages){
+                storageService.deleteFile(image.getImageUrl());
+            }
+        }
+        for (MultipartFile image : images) {
+            try {
+                String imageUrl = storageService.storeFile(image);
+                LectureImage lectureImage = new LectureImage();
+                lectureImage.setImageUrl(imageUrl);
+                lectureImage.setLecture(lecture);
+                lecture.addImage(lectureImage);
+            } catch (Exception e) {
+                logger.error("Failed to upload image", e);
+                throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "이미지 업로드 실패");
+            }
         }
     }
 
